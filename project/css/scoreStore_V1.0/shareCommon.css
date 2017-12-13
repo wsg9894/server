@@ -1,0 +1,35 @@
+.shareDiv a.bds_qzone{
+    background: url("../../images/qqzone.png");
+    background-position: top;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.shareDiv a.bds_tsina{
+    background: url("../../images/weibo.png");
+    background-position: top;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.shareDiv a.bds_weixin{
+    background: url("../../images/weixin.png");
+    background-position: top;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.shareDiv{
+    font-size: 0.12rem;
+    width:100%;
+    height: 100%;background-color: rgba(0,0,0,0.6);
+    display: none;
+    position: fixed;
+    z-index: 1;
+}
+.shareDiv span{
+    position: relative;
+    top: 0rem;
+    color:#fff;
+    display:block;
+    width: 100%;
+    text-align: center;
+    height: 0rem;
+}

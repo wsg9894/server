@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>邀请分享</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <script type="text/javascript">
+        var width=window.innerWidth;
+        var height=window.innerHeight;
+        if(width>=750){
+            width=750;
+        }
+        var html=document.getElementsByTagName("html")[0];
+        html.style.fontSize=width/3.2+"px";
+        var body=document.getElementsByTagName("body")[0];
+        html.style.width=width+"px";
+        html.style.height=height+"px";
+        window.onresize=function(){
+            var width=window.innerWidth;
+            if(width>=750){
+                width=750;
+            }
+            var html=document.getElementsByTagName("html")[0];
+            html.style.fontSize=width/3.2+"px";
+            var body=document.getElementsByTagName("body")[0];
+            html.style.width=width+"px";
+            html.style.height=height+"px";
+        }
+    </script>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+            font-family: Microsoft Yahei;
+        }
+        html{
+            font-size: 100px;
+            margin: 0px auto;
+        }
+        body{
+            font-size:0.1rem;
+            position: relative;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <img src="<{$POSTERSPIC}>" style="width: 100%" alt="">
+</body>
+</html>

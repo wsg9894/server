@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>E豆商城</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/point.css">
+    <script type="text/javascript" src="js/scoreStore/record.js"></script>
+    <style>
+		
+    </style>
+</head>
+<body>
+    <div id="title">
+		<a href="<{$BASEURL}>/project/index.php?r=scoreStore/Site">&lt;返回</a>
+		<p>我的E豆</p>
+    </div>
+    <div id="member">
+		<p class="left"><img src="images/imgs_03.png" alt=""><{$UINFO.sPhone}></p>
+		<a href="javascript:void(0)" class="right">E豆:<span><{$UINFO.iCurScore}></span></a>
+    </div>
+    <div id="shopContent">
+		<div class="tabs">
+			<ul>
+				<li name="tab">兑换记录</li>
+				<li class="hr"></li>
+				<li name="tab">E豆明细</li>
+			</ul>
+		</div>
+		<div class="tabsContents">
+			<div class="tabsContent" name="tabsContent">
+				<{section name=ELOGLOOP loop=$MYEXCHANGELOGLIST}>
+				<div class="recordContent">
+					<h3><p><{$MYEXCHANGELOGLIST[ELOGLOOP].desc}></p><span><{$MYEXCHANGELOGLIST[ELOGLOOP].score}></span></h3>
+					<{if $MYEXCHANGELOGLIST[ELOGLOOP].goodsInfo.voucher_id>0}>
+					<p>请到<span><a href="<{$BASEURL}>usercenter/UserVoucher.html">‘我的优惠券’-现金券</a></span>中查看
+					<{elseif $MYEXCHANGELOGLIST[ELOGLOOP].goodsInfo.third_id>0}>
+					<p>请到<span><a href="<{$BASEURL}>usercenter/UserVoucher.html?type=play">‘我的优惠券’-娱乐券</a></span>中查看
+					<{else}>
+					<p>请到<span><a href="<{$BASEURL}>usercenter/UserMovieCard.html">‘我的电影卡’</a></span>中查看
+					<{/if}>
+					<span class="date"><{$MYEXCHANGELOGLIST[ELOGLOOP].createtime}></span></p>
+				</div>
+				<{/section}>
+
+			</div>
+			<div class="tabsContent2" name="tabsContent">
+				<{section name=SLOGLOOP loop=$MYSCORELOGLIST}>
+				<div class="recordContent">
+					<h3><p><{$MYSCORELOGLIST[SLOGLOOP].desc}></p><span><{$MYSCORELOGLIST[SLOGLOOP].score}></span></h3>
+					<p><span class="date"><{$MYSCORELOGLIST[SLOGLOOP].createtime}></span></p>
+				</div>
+				<{/section}>
+			</div>
+		</div>
+    </div>
+<div style="display:none">
+<script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228"></script>
+</div>
+</body>
+</html>

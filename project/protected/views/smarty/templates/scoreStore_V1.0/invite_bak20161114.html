@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>E豆商城</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/point.css">
+    <script type="text/javascript" src="js/scoreStore/invite.js"></script>
+    <style>
+		
+    </style>
+</head>
+<body>
+    <div id="title">
+		<a href="<{$BASEURL}>/project/index.php?r=scoreStore/Site&tab=1">&lt;返回</a>
+		<p>邀请好友领E豆</p>
+    </div>
+    <div id="invite">
+		<div>
+			<h3><span>·</span>活动说明</h3>
+			<p><{$SCORECONF.actExplain}></p>
+		</div>
+		<div>
+			<h3><span>·</span>参与流程</h3>
+			<p><{$SCORECONF.actProcess}></p>
+		</div>
+
+		<input type="button" value="生成邀请海报" id="btn">
+    </div>
+    <div id="hidee">
+		<img src="<{$POSTERSPIC}>">
+    </div>
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>E票网</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/output/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/output/main.css">
+    <script type="text/javascript" src="js/output/jquery.min.js"></script>
+    <script type="text/javascript" src="js/output/swiper-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/output/layout.js"></script>
+    <script type="text/javascript" src="js/output/main.js"></script>
+    <script type="text/javascript" src="js/output/cinemacljs.js"></script>
+    <script type="text/javascript" src="js/output/scheduling.js"></script>
+    <script language="javascript">
+        var request = GetRequest();
+        var today = new Date();
+        var tomorrow = new Date((today / 1000 + 86400) * 1000);
+        var third = new Date((today / 1000 + 86400 * 2) * 1000);
+        var fourth = new Date((today/1000+86400*3)*1000);
+        var fifth = new Date((today/1000+86400*4)*1000);
+        var sixth = new Date((today/1000+86400*5)*1000);
+        var seventh = new Date((today/1000+86400*6)*1000);
+        var ardate = new Array();
+        var htmlcontent = new Array();
+        var moviedatacontent = new Array();
+
+        var cinemaId = request.cinemaId;
+
+        var curdate = "<{$showDate}>";
+        var movieId = request.movieId;
+        var curMovieId = movieId;
+        var moviename = {};
+        var oDate4 = new Array();
+        getMovieInfo(movieId, cinemaId);
+
+        function getMovieInfo(movieId, cinemaId) {
+            $.ajax({
+                type : 'get',
+                url : 'index.php?r=output/Ajax/GetMovieArrangeList',
+                data : {movieID : movieId,cinemaID : cinemaId},
+                dataType : 'json',
+                success : function(msg) {
+                    if (msg.ok) {
+                        showInfo(msg, movieId);
+                    }else{
+                        alert(msg.msg);
+                    }
+                },
+                error : function(msg) {
+                    return false;
+                }
+            });
+
+            return false;
+        }
+
+        function showInfo($retData, movieId) {
+            var arMovie = $retData.movie;
+            var arCinema = $retData.cinema;
+            var arArrange = $retData.arrange;
+            showCinema(arCinema);
+            //判断这个影片是否有排期
+            var movieFlag = false;
+            for(x in arMovie){
+                if(x==movieId){
+                    movieFlag = true;
+                    continue;
+                }
+            }
+            if(!movieFlag){
+                movieId = 0;
+                curMovieId = 0;
+            }
+
+            formMovieArrange(arMovie, movieId);
+
+            //选择排期这块效果展示
+            formArrange(arArrange);
+
+            showmovie(curMovieId, curdate);
+        }
+        function showCinema(arCinema) {
+            if (arCinema.length <= 0) {
+                return;
+            }
+
+            var sAddress = arCinema["sThAddress"];
+            if (sAddress.length > 20) {
+                sAddress = arCinema["sThAddress"].substr(0, 20) + "...";
+            }
+            var str = "";
+            var content= '<h3>' + arCinema['sThCinemaName'] + '</h3>';
+            content +='<p>' + sAddress + '</p>';
+            content +='<p style="margin-top: 0.1706rem;">'+str+'</p>';
+            $('.scheduling-head-left').html(content);
+
+            var str1 = arCinema['sTel'];
+            var content1='';
+            if(str1.length!=0){
+                content1 = '<a href="tel:'+str1+'"><img src="images/output/sphone.png" alt="电话"></a>';
+            }
+            $('.scheduling-head-right').html(content1);
+        }
+        //影片轮播滑动
+        function formMovieArrange(arMovie, movieId) {
+            var content = '';
+            var str = '';
+            var num=0;
+            var tot=-1;
+            for (var mid in arMovie) {
+                var iFavorMoiveName = "";
+                tot++;
+                var arr = arMovie[mid]['iFavorMoiveID'].split('、');
+            <{foreach from=$arMovieType item=temp key=k}>
+                for(var i = 0; i < arr.length; i++)
+                {
+                    if(arr[i] == <{$k}>)
+                    {
+                        iFavorMoiveName += "<{$temp}>"+"、";
+                    }
+                }
+            <{/foreach}>
+                content+='<div class="swiper-slide" movieID="'+mid+'">'
+                        +'<img src="' + arMovie[mid]['sImageUrl'] + '" alt="">'
+                        +'</div>';
+                if(movieId==0){
+                    str+='<div class="scheduling-movie-title active">'
+                            +'<h3>'+arMovie[mid]['sMovieName']+'</h3>'
+                            +'<p>'+arMovie[mid]['iRunTime']+'分钟｜'+iFavorMoiveName.substring(0,iFavorMoiveName.length-1)+'｜'+arMovie[mid]['sDirector']+'</p>'
+                            +'</div>';
+                    movieId=mid;
+                    curMovieId = mid;
+                }else{
+                    if(mid == movieId){
+                        num=tot;
+                        str+='<div class="scheduling-movie-title active">'
+                                +'<h3>'+arMovie[mid]['sMovieName']+'</h3>'
+                                +'<p>'+arMovie[mid]['iRunTime']+'分钟｜'+iFavorMoiveName.substring(0,iFavorMoiveName.length-1)+'｜'+arMovie[mid]['sDirector']+'</p>'
+                                +'</div>';
+                    }else{
+                        str+='<div class="scheduling-movie-title">'
+                                +'<h3>'+arMovie[mid]['sMovieName']+'</h3>'
+                                +'<p>'+arMovie[mid]['iRunTime']+'分钟｜'+iFavorMoiveName.substring(0,iFavorMoiveName.length-1)+'｜'+arMovie[mid]['sDirector']+'</p>'
+                                +'</div>';
+                    }
+                }
+            }
+
+            $(".scheduling-movie-group .swiper-wrapper").append(content);
+            $(".scheduling-movie-swiper").after(str);
+            swiper(num);
+        }
+        //排期显示
+        function formArrange(arArange) {
+            if (arArange.length <= 0) {
+                $('.scheduling-timetable').text("暂无排期");
+            }
+            var content="";
+            for (var movieId in arArange) {
+                var arrangeMovie = arArange[movieId];
+                var moviearrange = {};
+                var moviedata = {};
+                var moviedataAll = {};
+                var oDate1 = {};
+                var count = 0;
+                var t=0;
+                var active="";
+
+                if(curMovieId == 0||curMovieId == movieId){
+                    active="active";
+                }
+                content +='<div class="scheduling-timetable-movie '+active+'">'
+                        +'<div class="scheduling-daytable">'
+                        +'<div class="swiper-container">'
+                        +'<div class="swiper-wrapper">'
+                        +'</div>'
+                        +'</div>'
+                        +'</div>'
+                        +'<div class="scheduling-timetable-date">';
+                for (var date in arrangeMovie) {
+                    var active="";
+                    if(curdate == date){
+                        active="active";
+
+                    }
+                    content +='<div class="scheduling-timeinfo '+active+'">';
+                    var ePrice = '';
+                    var cPrice = '';
+                    var str1 = '';
+                    var smoviename = '';
+                    var arMovieRange = arrangeMovie[date];
+
+                    for (var i in arMovieRange) {
+
+                        var sigArrange = arMovieRange[i];
+                        var playdate = sigArrange['dBeginTime'].split(" ");
+                        var playtime = playdate[1].split(":");
+                        var hour = playtime[0];
+                        var minute = playtime[1];
+                        var sRoomName = sigArrange['sRoomName'];
+                        var sLanguagesDimensional = sigArrange['sLanguage'] + '/' + sigArrange['sDimensional'];
+                        if (minute.length == 1) {
+                            minute = "0" + minute;
+                        }
+                        var enddate = sigArrange['dEndTime'].split(" ");
+                        var endTime = enddate[1].split(":");
+                        var endHour = endTime[0];
+                        var endMinute = endTime[1];
+
+                        if (endMinute.length == 1) {
+                            endMinute = "0" + endMinute;
+                        }
+                        if(GetLength(sLanguagesDimensional) > 14){
+                            sLanguagesDimensional = cutstr(sLanguagesDimensional, 14, '/');
+                            if(sLanguagesDimensional[2] == true){
+                                sLanguagesDimensional = sLanguagesDimensional[0] + '<br/>'+ sLanguagesDimensional[1]
+                            }
+
+                        }
+                        sRoomName = cutstr(sigArrange['sRoomName'], 12);
+                        smoviename = sigArrange['sMovieName'];
+                        var mPrice=0;
+                        if(parseInt(sigArrange['huodongPrice'].split(".")[1]) == 0)
+                        {
+                            mPrice = parseInt(sigArrange['huodongPrice']);
+                        }else{
+                            mPrice = parseFloat(sigArrange['huodongPrice']).toFixed(1);
+                        }
+                        //网站价格
+                        ePrice = '<span class="vprice">￥'+ mPrice + '</span>';
+                        content +='<div class="scheduling-info-item">';
+                        content += '<div class="scheduling-info-item-left">';
+                        content += '<h3><span class="begin">' + hour + ':' + minute + '</span><span class="type">' + sLanguagesDimensional + '</span>'+ePrice+'</h3>';
+                        content += '<p><span class="end">' + endHour + ":" + endMinute + '散场</span><span class="hall">' + sRoomName + " " + '</span></p>';
+                        content += '</div>';
+                        content += '<div class="scheduling-info-item-right">';
+                        content += '<a href="index.php?r=output/Site/SeatIndex&iRoommovieID=' + sigArrange['iRoomMovieID'] + '" class="restbutton fontsize24" style="text-align: center;line-height: 1rem;"><button class="buy">购票</button></a>';
+                        content += '</div>';
+                        content += '</div>';
+                    }
+                    content += '</div>';
+                    moviearrange[date] = content;
+                    moviedata[date] = getdate(date);
+                }
+                content += '</div>';
+                content += '</div>';
+                $('.scheduling-timetable').html(content)
+                for (var todate in moviedata) {
+                    var oDate3 = "";
+                    var year = "";
+                    var month = "";
+                    var day = "";
+
+                    if(count == 0)
+                    {
+                        oDate1 = new Date();
+                        year = oDate1.getFullYear();
+                        month = parseInt(oDate1.getMonth())+1;
+                        day = oDate1.getDate();
+                        if(day < 10)
+                        {
+                            day = '0'+day;
+                        }
+                        if(month < 10){
+                            month = '0'+month;
+                        }
+                        oDate3 = year+'-'+month+'-'+day;
+                        moviedataAll[oDate3] = getdate(oDate3);
+                    }
+                    count = -1;
+                    moviename[movieId] = arrangeMovie[todate][arrangeMovie[todate].length-1]['sMovieName'];
+                    moviedataAll[todate] = moviedata[todate];
+                }
+                moviedatacontent[movieId] = moviedataAll;
+                htmlcontent[movieId] = moviearrange;
+            }
+        }
+        //日期显示
+        function showmovie(curMovieId, index) {
+            var content = '';
+            var datacontent = moviedatacontent[curMovieId];
+            var max = "";
+            var min = "2050-12-31";
+            var num = 0;
+            var knm = 0;
+            var today="";
+            oDate4[curMovieId] = new Array();
+            for (var key in datacontent) {
+                if (key>max)
+                {
+                    max = key;
+                }
+                if (key<min)
+                {
+                    min = key;
+                }
+                num++;
+            }
+            //所选的日期必须是在指定范围
+            if (max < curdate) {
+                curdate = max;
+            }
+            if (min>curdate)
+            {
+                curdate = min;
+            }
+            for (var key in datacontent) {
+                if (key == index || index==undefined) {
+                    content +='<div class="swiper-slide">'
+                            +'<div class="scheduling-daytable-item active" style="-webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none;text-decoration:none" onClick="showmovie(' + curMovieId + ',\'' + key + '\')">'
+                            +'<p>' + datacontent[key] + '</p>'
+                            +'</div>'
+                            +'</div>';
+                    index = 1;
+                } else {
+                    content +='<div class="swiper-slide">'
+                            +'<div class="scheduling-daytable-item" style="-webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none;text-decoration:none" onClick="showmovie(' + curMovieId + ',\'' + key + '\')">'
+                            +'<p>' + datacontent[key] + '</p>'
+                            +'</div>'
+                            +'</div>';
+                }
+                if(knm==1){
+                    var active="";
+                    if(today == curdate){
+                        active="active";
+                    }
+
+                    oDate4[curMovieId][key] = '<div class="scheduling-timeinfo '+active+'" id="zanwu">'
+                            +'<img src="images/output/today-none.png"/>'
+                            +'<p style="text-align: center;border:solid 1px #ccc;font-size: 0.1rem;padding:0.0426rem 0.0853rem;border-radius:4px;width:50%;margin:0px auto;color:#fead00;-webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none;text-decoration:none" onClick="showmovie(' + curMovieId + ',\'' + key + '\')">查看' + datacontent[key] + '场次</p>'
+                            +'</div>';
+                }
+                if(knm==0){
+                    today=key;
+                }
+                knm++;
+            }
+            showMovieArrange(curMovieId,oDate4[curMovieId],today);
+            $('.scheduling-timetable .swiper-wrapper').html(content);
+            var swiperDate = new Swiper('.scheduling-timetable .active .swiper-container', {
+                pagination: '.swiper-pagination',
+                slidesPerView: 3.7,
+                paginationClickable: true,
+                // spaceBetween: 5
+            });
+            dateOnclick();
+        }
+
+        //今日暂无排期
+        function showMovieArrange(movieId,oDate6,today) {
+
+            if ( typeof (htmlcontent[movieId][today]) == "undefined" || typeof (htmlcontent[movieId][today]) == undefined) {
+                $('.scheduling-timetable .active .scheduling-timeinfo').removeClass("active");
+                for(var todate in oDate6){
+                    if($('.scheduling-timetable .active .scheduling-timeinfo').attr('id')=="zanwu"){
+                        $("#id").addClass("active");
+                    }else{
+                        $('.scheduling-timetable .active .scheduling-timeinfo:first').before(oDate6[todate]);
+                    }
+                    return;
+                }
+            }
+            curMovieId = movieId;
+        }
+
+        function getdate(dtime) {
+            if (dateisequal(dtime, today)) {
+                return '今天' + (today.getMonth() + 1) + "月" + today.getDate() + "日";
+            }
+
+            if (dateisequal(dtime, tomorrow)) {
+                return '明天' + (tomorrow.getMonth() + 1) + "月" + tomorrow.getDate() + "日";
+            }
+
+            if (dateisequal(dtime, third)) {
+                return '后天' + (third.getMonth() + 1) + "月" + third.getDate() + "日";
+            }
+
+            var weekDay = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+            if(dateisequal(dtime, fourth)){
+                return weekDay[fourth.getDay()] + (fourth.getMonth() + 1) + "月" + fourth.getDate() + "日";
+            }
+            if(dateisequal(dtime, fifth)){
+                return weekDay[fifth.getDay()] + (fifth.getMonth() + 1) + "月" + fifth.getDate() + "日";
+            }
+            if(dateisequal(dtime, sixth)){
+                return weekDay[sixth.getDay()] + (sixth.getMonth() + 1) + "月" + sixth.getDate() + "日";
+            }
+            if(dateisequal(dtime, seventh)){
+                return weekDay[seventh.getDay()] + (seventh.getMonth() + 1) + "月" + seventh.getDate() + "日";
+            }
+            return '';
+        }
+        function dateisequal(date1, date2) {
+            var d1 = new Date(date1);
+            var d2 = new Date(date2);
+            return (d1.getFullYear() == d2.getFullYear() && d1.getMonth() == d2.getMonth() && d1.getDate() == d2.getDate());
+        }
+
+        $(function(){
+            $("#back").attr("href","<{$backurl}>");
+        })
+    </script>
+</head>
+<body>
+<div class="out-head">
+    <div class="out-head-left">
+        <a href="" id="back"><img src="images/output/reback.png" alt="回退"></a>
+    </div>
+    <div class="out-head-right">
+        <span>电影排期</span>
+    </div>
+</div>
+<div style="height:0.3413rem"></div>
+<div class="scheduling-head">
+    <div class="scheduling-head-left">
+
+    </div>
+    <div class="scheduling-head-right">
+
+    </div>
+</div>
+<div class="scheduling-movie-group">
+    <div class="scheduling-movie-swiper">
+        <div class="scheduling-movie-blurbg blur">
+            <div class="scheduling-movie-blurbg-000"></div>
+        </div>
+        <div class="swiper-container swiper-container-horizontal swiper-container-3d swiper-container-coverflow">
+            <div class="swiper-wrapper">
+
+            </div>
+        </div>
+        <img src="images/output/totop.png" alt="" class="scheduling-movie-swiper-totop">
+    </div>
+</div>
+<div class="scheduling-timetable">
+    <!-- 某电影的时间表 -->
+    <div class="scheduling-timetable-movie active">
+        <!-- 日期表 -->
+        <div class="scheduling-daytable">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+
+                </div>
+            </div>
+        </div>
+        <!-- 根据日期的时间表 -->
+        <div class="scheduling-timetable-date">
+            <div class="scheduling-timeinfo active">
+
+            </div>
+            <div class="scheduling-timeinfo">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function swiper(num){
+        var swiper = new Swiper('.scheduling-movie-swiper .swiper-container', {
+            pagination: '.swiper-pagination',
+            effect: 'coverflow',
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: 'auto',
+            initialSlide:num,
+            slideToClickedSlide:true,
+            coverflow: {
+                rotate: 50,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows : true
+            },
+            onTouchEnd: function(swiper){
+                // 切换模糊背景图
+
+                setTimeout(function(){
+                    toggereffect(swiper.activeIndex);
+                },50)
+            }
+        });
+        $('.scheduling-movie-swiper .swiper-container .swiper-slide img').each(function(i){
+            $(this)[0].onclick=function(){
+                toggereffect(swiper.activeIndex);
+            }
+        })
+    }
+
+    function toggereffect(activeIndex){
+        var activeSrc=$('.swiper-slide img').eq(activeIndex)[0].src
+        $('.scheduling-movie-blurbg').css('background-image','url('+activeSrc+')')
+        //显示index影片的timetable
+        $('.scheduling-timetable-movie').each(function(i){
+            $(this).removeClass('active')
+        })
+        $('.scheduling-timetable-movie').eq(activeIndex).addClass('active')
+        //显示index影片的类型和影片名称
+        $('.scheduling-movie-title').each(function(i){
+            $(this).removeClass('active')
+        })
+        $('.scheduling-movie-title').eq(activeIndex).addClass('active')
+        // 清除所有active
+        $('.scheduling-timetable-movie.active .scheduling-daytable .scheduling-daytable-item').each(function(i){
+            $(this).removeClass('active')
+        })
+        $('.scheduling-timetable-movie.active .scheduling-timetable-date .scheduling-timeinfo').each(function(i){
+            $(this).removeClass('active')
+        })
+        // 显示index影片第一个date的timetable
+        $('.scheduling-timetable-movie.active .scheduling-daytable .scheduling-daytable-item:first').addClass('active')
+        $('.scheduling-timetable-movie.active .scheduling-timetable-date .scheduling-timeinfo:first').addClass('active')
+        showmovie($('.swiper-slide').eq(activeIndex).attr('movieID'))
+        var swiperDate = new Swiper('.scheduling-timetable .active .swiper-container', {
+            pagination: '.swiper-pagination',
+            slidesPerView: 4,
+            paginationClickable: true,
+            // spaceBetween: 5
+        });
+
+    }
+</script>
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</body>
+</html>

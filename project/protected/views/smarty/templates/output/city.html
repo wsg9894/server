@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>选择所在城市位置</title>
+    <link href="css/output/city.css" rel='stylesheet' type='text/css' />
+    <script src="js/output/jquery.min.js"></script>
+    <!--<script type="text/javascript" src="<{$baidu_map_api}>"></script>-->
+    <script type="text/javascript" src="js/output/common.js"> </script>
+    <script src="js/output/city.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="boxx" style="overflow-x: hidden;">
+
+    <div class="m-top p-r">
+        <span onclick="gbcitypage()" style="cursor: pointer;" class="p-a mback"><img src="/viewlibs/default/templates/cinema/images/1212cuo.png" /></span>
+        <span  class="ta-a d-block">选择城市</span>
+
+    </div>
+
+
+
+    <section class="fz24 co333 pdd12 bgeee hei115">当前定位城市</section>
+
+    <div class="city-xz19">
+        <div id="aqiehuan" class=" fz24 co000 hei115 border05 d-block fl-l">
+            <span id="positioncity">北京，</span><span id="qiehuan" onclick="qiehuancity()" class="co00a2cb"  >切换当前城市</span>
+
+        </div>
+
+    </div>
+
+
+    <section class="fz24 co333 pdd12 bgeee hei115">热门城市</section>
+
+
+    <div id="remen" class="">
+        <div id="remcity" style="width: 100%;float: left" class="city-xz20">
+            <span>
+                <div href="" onclick ="selectCity(1,'北京')" class=" fz24 co000 hei115 border05 d-block fl-l curs">北京</div>
+            </span>
+            <span>
+                <div href="" onclick ="selectCity(17,'广州')"  class=" fz24 co000 hei115 border05 d-block fl-l curs">广州</div>
+            </span>
+            <span>
+                <div href="" onclick ="selectCity(2,'上海')"  class=" fz24 co000 hei115 border05 d-block fl-l curs">上海</div>
+            </span>
+            <span>
+                <div href="" onclick ="selectCity(86,'石家庄')"  class=" fz24 co000 hei115 border05 d-block fl-l curs">石家庄</div>
+            </span>
+            <span>
+                <div href="" onclick ="selectCity(82,'深圳')"  class=" fz24 co000 hei115 border05 d-block fl-l curs">深圳</div>
+            </span>
+            <span>
+                <div href="" onclick ="selectCity(84,'苏州')"  class=" fz24 co000 hei115 border05 d-block fl-l curs">苏州</div>
+            </span>
+            <span>
+                <div href="" onclick ="selectCity(3,'天津')"  class=" fz24 co000 hei115 border05 d-block fl-l curs">天津</div>
+            </span>
+        </div>
+        <div id="city" style="width: 100%;float: left;"></div>
+    </div>
+
+</div>
+
+<div class="auto_hidden" id="auto"><!--自动完成 DIV--></div>
+<style>
+    /*height:40px;*/
+
+    .posTop{ height: 37px;
+        width: 96px;
+        position: fixed;
+        bottom: 5px;
+        right: 4px;
+        background-image: url('/viewlibs/default/templates/cinema/images/baktop.png');
+        background-position: 60px 0px;
+        background-repeat: no-repeat;
+        display:none;
+    }
+</style>
+<div class="posTop" id="top">
+    <!-- <div id="to_top"></div> -->
+</div>
+<script>
+    var autoComplete=new AutoComplete('cityCode','auto',[]);
+
+    window.onload = function(){
+
+        var oTop = document.getElementById("top");
+        window.onscroll = function(){
+
+            var scrolltop = document.documentElement.scrollTop || document.body.scrollTop;
+            if(scrolltop>0){
+                oTop.style.display = "block";
+            }else{
+                oTop.style.display = "none";
+            }
+
+        }
+        oTop.onclick = function(){
+            document.documentElement.scrollTop = document.body.scrollTop =0;
+        }
+    }
+
+</script>
+</body>
+</html>

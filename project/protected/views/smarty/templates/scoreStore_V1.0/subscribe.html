@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>关注公众号</title>
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<style>
+	*{
+		margin: 0px;
+		padding: 0px;
+		font-family: Microsoft Yahei;
+	}
+	html{
+		font-size: 100px;
+		margin: 0px auto;
+	}
+	body{
+		font-size: 16px;
+		background-color: #00a3f1;
+	}
+	.container{
+		width: 100%;
+
+	}
+	.content-img{
+		width: 80%;
+		border:1px solid transparent;
+		margin: 0.4rem auto;
+		background-color: #fff;
+	}
+	.content-img .codeimg{
+		width: 90%;
+		margin: 0.15rem auto;
+		margin-bottom: 0px;
+	}
+	.content-img .codeimg img{
+		width: 100%;
+	}
+	.content-img .finger{
+		width: 90%;
+		margin: 0.05rem auto;
+		margin-top: 0px;
+	}
+	.content-img .finger img{
+		width: 100%;
+	}
+</style>
+</head>
+
+<body>
+<div class="container">
+	<div class="content-img">
+		<div class="codeimg">
+			<img src="images/subscribe.png" />
+		</div>
+		<div class="finger">
+			<img src="images/finger.png" />
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+window.onload=function(){
+    var width=window.innerWidth;
+    if(width>=750){
+    	width=750;
+    }
+    var html=document.getElementsByTagName("html")[0];
+    html.style.fontSize=width/3.2+"px";
+    var body=document.getElementsByTagName("body")[0];
+    html.style.width=width+"px";
+}
+window.onresize=function(){
+	var width=window.innerWidth;
+    if(width>=750){
+    	width=750;
+    }
+    var html=document.getElementsByTagName("html")[0];
+    html.style.fontSize=width/3.2+"px";
+    var body=document.getElementsByTagName("body")[0];
+    html.style.width=width+"px";
+}
+</script>
+<div style="display:none">
+<script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228"></script>
+</div>
+</body>
+</html> 

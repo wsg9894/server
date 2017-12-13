@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><{$GOODSINFO.list_name}></title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/scoreStore/main.css">
+    <script type="text/javascript" src="js/scoreStore/layout.js"></script>
+    <script type="text/javascript" src="js/scoreStore/swiper-3.4.0.min.js"></script>
+</head>
+<body class="detail">
+	<div class="floatButton"><a href="/project/index.php?r=scoreStore/Site/Tasks"><img src="images/scoreStore/button.png"></a></div>
+
+	<div class="alertHide">
+		<div class="alert">
+			<div class="dialog dialog1">
+				<p>确认兑换？</p>
+				<input type="button" class="dialog1no" value="取消"><input type="button" class="dialog1ok" value="确认">
+			</div>
+			<div class="dialog dialog2">
+				<p>兑换成功</p>
+				<input type="button" class="dialog2check" value="查看详情">
+			</div>
+		</div>
+	</div>
+
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+			<{section name=DETAILPICLOOP loop=$GOODSINFO.detail_pic_arr}>
+            <div class="swiper-slide">
+                <img src="<{$GOODSINFO.detail_pic_arr[DETAILPICLOOP]}>">
+            </div>
+			<{/section}>
+        </div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <div class="detailTitle">
+        <h3><{$GOODSINFO.name}></h3>
+        <p>￥<span><{$GOODSINFO.price}>E豆</span><{if $GOODSINFO.extra_price>0}><span>+<{$GOODSINFO.extra_price}>元</span><{/if}>
+        <input id="forBtn" type="button" value="兑换">
+        </p>
+        <p id="sNotice" style=""></p>
+    </div>
+    <div class="detailContent">
+		<!--
+        <h4>商品名称</h4>
+        <p><{$GOODSINFO.name}></p>
+		-->
+        <h4>商品简介</h4>
+        <p><{$GOODSINFO.desc}></p>
+        <h4>使用流程</h4>
+        <p><{$GOODSINFO.explain}></p>
+    </div>
+<script>        
+  var mySwiper = new Swiper ('.swiper-container', {
+    direction: 'horizontal',
+    loop: true,
+    autoplay:3000,
+    pagination: '.swiper-pagination',
+  })   
+  window.onload=function(){
+	 /*
+	var forBtn=document.getElementById('forBtn');
+	var sNotice=document.getElementById('sNotice');
+	forBtn.onclick=function(){
+
+		<{if $EXCHANGEERRINFO.ok}>
+			<{if $ISVIRGOODS}>
+			
+			window.location.href='/project/index.php?r=scoreStore/Site/GoodsExchange&gid=<{$GOODSINFO.gid}>';
+			<{else}>
+			window.location.href='/project/index.php?r=scoreStore/Site/GoodsOrder&gid=<{$GOODSINFO.gid}>';
+			<{/if}>
+		<{else}>
+			sNotice.innerHTML="<{$EXCHANGEERRINFO.errmsg}>";
+			sNotice.style.display="block";
+		<{/if}>
+	}
+	*/
+
+	var forBtn=document.querySelector("#forBtn");
+	var alertHide=document.querySelector(".alertHide");
+	var dialog1=document.querySelector(".dialog1");
+	var dialog1ok=document.querySelector(".dialog1ok");
+	var dialog1no=document.querySelector(".dialog1no");
+	var dialog2=document.querySelector(".dialog2");
+	var dialog2check=document.querySelector(".dialog2check");
+	var sNotice=document.getElementById('sNotice');
+	forBtn.onclick=function(){
+
+		<{if $EXCHANGEERRINFO.ok}>
+			<{if $ISVIRGOODS}>
+				alertHide.style.display="block";
+				dialog1.style.display="block";
+			<{else}>
+				window.location.href='/project/index.php?r=scoreStore/Site/GoodsOrder&gid=<{$GOODSINFO.gid}>';
+			<{/if}>
+
+		<{else}>
+			sNotice.innerHTML="<{$EXCHANGEERRINFO.errmsg}>";
+			sNotice.style.display="block";
+		<{/if}>
+	}
+	dialog1ok.onclick=function(){
+		window.location.href='/project/index.php?r=scoreStore/Site/GoodsExchange&gid=<{$GOODSINFO.gid}>';
+	}
+	dialog1no.onclick=function(){
+		alertHide.style.display="none";
+	}
+	dialog2check.onclick=function(){
+		location.href="http://www.baidu.com"
+	}
+
+ }     
+</script>
+
+<div style="display:none">
+<script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228"></script>
+</div>
+</body>
+</html>

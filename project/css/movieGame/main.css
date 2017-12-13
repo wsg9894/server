@@ -1,0 +1,185 @@
+/***/
+
+*{margin: 0px;padding: 0px;font-family: Microsoft Yahei;}
+html{font-size: 100px;margin: 0px auto;}
+body{font-size:0.1rem;position: relative;height: 100%;background-color: #f3f3f3;color:#333;}
+a{
+	color: #333;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	text-decoration: none;
+}
+.blur {
+	-webkit-filter: blur(8px);
+	-moz-filter: blur(8px);
+	-ms-filter: blur(8px);
+	filter: blur(8px);
+}
+.transform90{
+	/*display: inline-block;*/
+	transform:rotate(45deg);
+	-ms-transform:rotate(45deg);
+	-moz-transform:rotate(45deg);
+	-webkit-transform:rotate(45deg);
+	-o-transform:rotate(45deg);
+}
+.cHr{width: 100%;height: 0.128rem;background-color: #F4F3F2;}
+.get-success.active{display: block}
+.get-success{position: fixed;width: 3.2rem;height: 100%;top: 0px;display: none;z-index: 1000;background-color: rgba(0,0,0,0.6);}
+.get-success .get-success-content{width: 66.6666%;background-color: #fff;margin:1.1946rem auto;margin-bottom: 0px;overflow: hidden;border-radius: 8px;position: relative;}
+.get-success .get-success-content img{width: 30%;display: block;margin:0.128rem auto;margin-bottom:0px;  }
+.get-success .get-success-content .closeImg{width: 6%;position: absolute;right: 0.06rem;margin-top: 0.06rem;}
+.get-success .get-success-content h3{color:red;text-align: center;margin-top: 0.1706rem;font-weight: 400;font-size: 0.128rem}
+.get-success .get-success-content h4{text-align: center;margin:0.256rem auto;margin-bottom:0px;font-weight: 400;font-size: 0.1024rem}
+.get-success .get-success-content p{text-align: center;margin:0.128rem auto;margin-bottom:0px;font-size: 0.1024rem}
+.get-success .get-success-content span{color:#999;width: 100%;display: block;text-align: center;margin:0.0426rem auto;margin-bottom:0.128rem;font-size: 0.0853rem}
+.get-success .get-success-content>div{width: 100%;height: 0.3413rem;border-top: 1px solid #ececec;}
+.get-success .get-success-content>div>div{width: 50%;float: left;height: 100%;position: relative;}
+.get-success .get-success-content .ok p{font-size: 0.1024rem;height: 40%;margin:0px;position: absolute;top: 30%;width: 100%; color:#666;}
+.get-success .get-success-content .copy p{font-size: 0.1024rem;height: 40%;margin:0px;position: absolute;top: 30%;width: 100%; border-left: 1px solid #ececec;box-sizing: border-box;color:#54E06C;}
+/*index*/
+
+.index-head{width: 100%;height: 1.0666rem;background-color: #fff;}
+.index-head .swiper-container{width: 100%;height: 100%;}
+.index-head .swiper-slide{overflow: hidden;}
+.index-head .swiper-slide img{width: 100%;}
+.index-menu{width: 100%;height: 0.6826rem;background-color: #fff;}
+.index-menu .index-menu-item{width: 25%;height: 100%;float: left;}
+.index-menu .index-menu-item img{width: 42.6666%;display:block;margin:0.0853rem auto;margin-bottom:0.0213rem; }
+.index-menu .index-menu-item p{text-align: center;font-size: 0.1024rem;}
+.index-hot-game{width: 100%;background-color: #fff;padding-bottom: 0.128rem;}
+.index-hot-game .index-hot-title{width: 100%;height: 0.3413rem;border-bottom: 1px solid #ececec;}
+.index-hot-game .index-hot-title h3{font-weight: 400;line-height: 0.3413rem;width: 25%;margin: 0px auto;color:red;float:left;text-align: center}
+.index-hot-game .index-hot-item{width: 100%;height: 0.6862rem;}
+.index-hot-game .index-hot-item-left{width: 21.3333%;height: 100%;float: left;}
+.index-hot-game .index-hot-item-left img{border-radius:8px;width:75%;height:0.512rem;display: block;margin:0.0853rem auto;}
+.index-hot-game .index-hot-item-right{width: 78.6666%;height: 100%;float: left;position: relative;border-bottom: 1px solid #ececec;box-sizing: border-box;}
+.index-hot-game .index-hot-item-right h3{font-weight: 400;font-size: 0.1196rem;position: absolute;top: 0.0853rem;}
+.index-hot-game .index-hot-item-right .notice{font-size: 0.1024rem;color:#999;position: absolute;bottom: 0.256rem;}
+.index-hot-game .index-hot-item-right .tip{font-size: 0.0853rem;color:#999;position: absolute;bottom: 0.0853rem;}
+.index-hot-game .index-hot-item-right button{-webkit-appearance:none;background-color: #fff;border:none;font-size: 0.1rem;border-radius: 4px;padding: 0.0427rem 0.0853rem;position: absolute;bottom: 0.1706rem;right: 3.4632%;color:#118EEA;border:1px solid #118EEA;}
+
+.index-bottom-line{font-size: 0.08rem;color:#ccc;text-align: center;margin-top:0.2133rem;margin-bottom:0.2133rem; }
+
+.index-foot{width: 3.2rem;height: 0.4179rem;background-color: #fff;border-top: 1px solid #ececec;position: fixed;bottom: 0px;}
+.index-foot .index-foot-item.active p{color:#1dd087;}
+.index-foot .index-foot-item{width: 20%;float: left;height: 100%;}
+.index-foot .index-foot-item img{width: 32%;margin: 0.0213rem auto;display: block;margin-bottom: 0px;}
+.index-foot .index-foot-item p{text-align:center;font-size: 0.0853rem;color:#999;}
+
+/**/
+
+.ranking-head{width: 100%;height: 0.4266rem;background-color: #fff;}
+.ranking-head .ranking-head-item.active{color:#ff4400;border-bottom: 2px solid #ff4400; }
+.ranking-head .ranking-head-item{width: 25%;height: 100%;float: left;text-align: center;line-height:0.55rem;}
+.ranking-tabContent{width: 100%;background-color: #fff;}
+.ranking-tabContent .ranking-tabContent-item.active{display: block}
+.ranking-tabContent .ranking-tabContent-item{display: none;}
+.ranking-movie-month{width: 100%;padding-bottom: 0.128rem;}
+.ranking-movie-month .index-hot-title{width: 100%;height: 0.3413rem;border-bottom: 1px solid #ececec;}
+.ranking-movie-month .index-hot-title h3{font-weight: 400;line-height: 0.3413rem;width: 94.6666%;margin: 0px auto;color:#ff4400;}
+.ranking-movie-month .index-hot-item{width: 100%;height: 0.6862rem;}
+.ranking-movie-month .index-hot-item-left{width: 26.6666%;height: 100%;float: left;position: relative;}
+.ranking-movie-month .index-hot-item-left img{width:60%;height:0.512rem;position: absolute;top: 0.0853rem;left: 30%;border-radius: 8px;}
+.ranking-movie-month .index-hot-item-left span{position: absolute;height: 20%;top: 35%;width: 30%;left: 2%;text-align: center;font-size: 0.1194rem;color:#ff4400;}
+.ranking-movie-month .index-hot-item-left span img{width: 60%;top: 0px;left: 20%;}
+.ranking-movie-month .index-hot-item-right{width: 73.3333%;height: 100%;float: left;position: relative;border-bottom: 1px solid #ececec;box-sizing: border-box;}
+.ranking-movie-month .index-hot-item-right h3{font-weight: 400;font-size: 0.1196rem;position: absolute;top: 0.0853rem;}
+.ranking-movie-month .index-hot-item-right .notice{font-size: 0.1024rem;color:#999;position: absolute;bottom: 0.256rem;}
+.ranking-movie-month .index-hot-item-right .tip{font-size: 0.0853rem;color:#999;position: absolute;bottom: 0.0853rem;}
+.ranking-movie-month .index-hot-item-right button{-webkit-appearance:none;background-color: #fff;border:none;font-size: 0.1rem;border-radius: 4px;padding: 0.0427rem 0.0853rem;position: absolute;bottom: 0.22rem;right: 3.4632%;color:#118EEA;border:1px solid #118EEA;}
+
+/*package*/
+
+.package-game{width: 100%;background-color: #fff;zoom:1;overflow: hidden;border-bottom: 1px solid #ececec;}
+.package-game-left{width: 21.3333%;float: left;}
+.package-game-left img{border-radius:8px;width: 75%;height:0.512rem;display: block;margin:0.0853rem auto;}
+.package-game-right{width: 78.6666%;float: left;}
+.package-game-right .package-game-head{position: relative;width:100%;height: 0.6826rem;}
+.package-game-right .package-game-head img{height:37.5%;position: absolute;right: 6.7796%;top:31.25%;}
+.package-game-right.active .package-game-item{display: block}
+.package-game-right .package-game-item{position: relative;width:100%;height: 0.6826rem;border-top:1px solid #ececec;box-sizing: border-box;display: none;}
+.package-game-right h3{font-weight: 400;font-size: 0.1194rem;position: absolute;top: 0.0853rem;width: 80%;}
+.package-game-right p{font-size: 0.1024rem;color:#999;position: absolute;top: 0.2986rem;width: 80%;}
+.package-game-right span{font-size: 0.0853rem;color:#ff3838;position: absolute;bottom: 0.0853rem;}
+.package-game-right button.active{color:#ff3838;border:1px solid #ff3838;}
+.package-game-right button{-webkit-appearance:none;background-color: #fff;border:none;font-size: 0.1rem;border-radius: 4px;padding: 0.0427rem 0.0853rem;position: absolute;bottom: 0.1706rem;right: 3.4632%;color:#ccc;border:1px solid #ececec;}
+
+/**/
+
+.gamedetail-premovie{width: 100%;height: 1.792rem;overflow: hidden;}
+.gamedetail-premovie .premovie-video{width: 100%;height: 100%;}
+.gamedetail-premovie img{width: 100%;}
+.game-package{width: 100%;background-color: #fff;}
+.game-package .game-package-head{width: 100%;zoom: 1;overflow: hidden;}
+.game-package .game-package-head-left{width: 21.3333%;height: 100%;float: left;}
+.game-package .game-package-head-left img{border-radius:8px;width:75%;height:0.512rem;display: block;margin:0.0853rem auto;}
+.game-package .game-package-head-right{width: 78.6666%;height: 100%;float: left;position: relative;}
+.game-package .game-package-head-right .game-package-head-right-head{width: 100%;height: 0.6862rem;position: relative;}
+.game-package .game-package-head-right h3{font-weight: 400;font-size: 0.1196rem;position: absolute;top: 0.0853rem;}
+.game-package .game-package-head-right .notice{font-size: 0.1024rem;color:#999;position: absolute;bottom: 0.256rem;}
+.game-package .game-package-head-right .tip{font-size: 0.0853rem;color:#999;position: absolute;bottom: 0.0853rem;}
+.game-package .game-package-head-right button{-webkit-appearance:none;background-color: #fff;border:none;font-size: 0.1rem;border-radius: 4px;padding: 0.0427rem 0.0853rem;position: absolute;bottom: 0.1706rem;right: 3.4632%;color:#ff3838;border:1px solid #ff3838;}
+.game-package .game-package-head-right h4{font-weight: 400;font-size: 0.1024rem;color:#54E06C;line-height: 0.27306rem;height: 0.27306rem;border-top: 1px solid #ececec;box-sizing: border-box;}
+.game-package .game-package-head-right.active .package-game-item{display: block}
+.game-package .game-package-head-right .package-game-item{position: relative;width:100%;height: 0.6826rem;border-top:1px solid #ececec;box-sizing: border-box;display: none;}
+.game-package .game-package-head-right .package-game-item h3{font-weight: 400;font-size: 0.1194rem;position: absolute;top: 0.0853rem;width: 80%;}
+.game-package .game-package-head-right .package-game-item p{font-size: 0.1024rem;color:#999;position: absolute;top: 0.2986rem;width: 80%;}
+.game-package .game-package-head-right .package-game-item span{font-size: 0.0853rem;color:#ff3838;position: absolute;bottom: 0.0853rem;}
+.game-package .game-package-head-right .package-game-item button.active{color:#ff3838;border:1px solid #ff3838;}
+.game-package .game-package-head-right .package-game-item button{-webkit-appearance:none;background-color: #fff;border:none;font-size: 0.1rem;border-radius: 4px;padding: 0.0427rem 0.0853rem;position: absolute;bottom: 0.1706rem;right: 3.4632%;color:#ccc;border:1px solid #ececec;}
+.gamedetail-content{width:100%;background-color: #fff;}
+.gamedetail-content h3{font-weight: 400;line-height: 0.3072rem;height:0.3072rem;width: 94.6666%;margin-left: 2.6666%;}
+.gamedetail-content>div{border-top: 1px solid #ececec;}
+.gamedetail-content>div>p{width: 94.6666%;margin: 0.1237rem auto;color:#666;}
+.gamedetail-content .swiper-container{margin: 0.1237rem auto; }
+.gamedetail-content .gamedetail-poster-group img{width: 100%;}
+.gamedetail-install{width:3.2rem;height: 0.512rem;position: fixed;bottom: 0px;background-color: #fff;z-index: 99;border-top: 1px solid #ececec;}
+.gamedetail-install button{width: 94.6666%;margin:0.128rem 2.6666%;background-color:#24E886;color:#fff; font-size: 0.1536rem;height:0.3413rem;border:none;border-radius: 8px;-webkit-appearance:none;}
+.hide-poster.active{display: block}
+.hide-poster{position: fixed;top: 0px;width: 3.2rem;height: 100%;background-color: #000;z-index: 999;display: none;}
+.hide-poster .swiper-container{width: 100%;height: 100%;}
+.hide-poster img{width: 100%;position: absolute;}
+
+/**/
+
+.my-head{width: 100%;height: 0.4266rem;background-color: #fff;}
+.my-head .my-head-item.active{color:#ff4400;border-bottom: 2px solid #ff4400;}
+.my-head .my-head-item{width: 33.3333%;height: 0.42rem;float: left;text-align: center;}
+.my-head .my-head-item h3{font-weight: 400;font-size: 0.128rem;line-height: 0.5rem;}
+.my-content{width: 100%;background-color: #fff;padding-bottom: 0.0853rem;}
+.my-content-item.active{display: block;}
+.my-content-item{display: none;}
+.my-content-item .index-hot-item{width: 100%;height: 0.6862rem;}
+.my-content-item .index-hot-item-left{width: 21.3333%;height: 100%;float: left;}
+.my-content-item .index-hot-item-left img{border-radius:8px;width:75%;height:0.512rem;display: block;margin:0.0853rem auto;}
+.my-content-item .index-hot-item-right{width: 78.6666%;height: 100%;float: left;position: relative;border-bottom: 1px solid #ececec;box-sizing: border-box;}
+.my-content-item .index-hot-item-right h3{font-weight: 400;font-size: 0.1196rem;position: absolute;top: 0.0853rem;}
+.my-content-item .index-hot-item-right .notice{font-size: 0.1024rem;color:#999;position: absolute;bottom: 0.256rem;}
+.my-content-item .index-hot-item-right .tip{font-size: 0.0853rem;color:#ff3838;position: absolute;bottom: 0.0853rem;}
+.my-content-item .index-hot-item-right button{-webkit-appearance:none;background-color: #fff;border:none;font-size: 0.1rem;border-radius: 4px;padding: 0.0427rem 0.0853rem;position: absolute;bottom: 0.1706rem;right: 3.4632%;color:#54E06C;border:1px solid #54E06C;}
+.my-content-item .none{display: none;}
+.my-content-item .none.active{display: block;}
+.my-content-item .none p{color:#ccc;text-align: center;font-size: 0.128rem;position: relative;top: 0.4266rem;}
+.my-content-item .none img{display:block;margin:0px auto;width: 40%;margin-top: 0.6826rem;}
+.my-content-item .none button{-webkit-appearance:none;background-color: #f40;color:#fff;font-size: 0.128rem;border:none;margin:0.4266rem auto;display: block;border-radius: 8px;height: 0.3413rem;width: 48%;}
+.package-content-item{width:100%;}
+.package-content-item .package-content-item-head{width: 100%;height: 0.6826rem;border-bottom: 1px solid #ececec;box-sizing: border-box;}
+.package-content-item .package-content-item-head .package-content-item-head-left{width: 21.3333%;height:100%;float: left;}
+.package-content-item .package-content-item-head .package-content-item-head-left img{border-radius:8px;height:0.512rem;width: 75%;margin:0.0853rem 12.5%;}
+.package-content-item .package-content-item-head .package-content-item-head-right{width: 78.6666%;height:100%;float: left;position: relative;}
+.package-content-item .package-content-item-head .package-content-item-head-right h3{font-weight: 400;font-size: 0.1194rem;position: absolute;top: 0.0853rem;}
+.package-content-item .package-content-item-head .package-content-item-head-right p{font-size: 0.1024rem;color:#999;position: absolute;top: 0.2986rem;}
+.package-content-item .package-content-item-head .package-content-item-head-right span{font-size: 0.1024rem;color:#ff3838;position: absolute;bottom: 0.0853rem;}
+.package-content-item .package-content-item-buttons{width: 100%;height: 0.3413rem;border-bottom: 1px solid #ececec;box-sizing: border-box;}
+.package-content-item .package-content-item-buttons>a>div{width: 50%;float: left;height: 100%;text-align: center;position: relative;}
+.package-content-item .package-content-item-buttons>a>div>p{font-size: 0.1024rem;height: 40%;position: absolute;top: 30%;width: 100%;}
+.package-content-item .package-content-item-buttons .copy{color:#54E06C;}
+.package-content-item .package-content-item-buttons .direction{color:#ff3838;}
+.package-content-item .package-content-item-buttons .copy p{border-left: 1px solid #ececec;box-sizing: border-box;}
+.news-content-item .news-content-item-head{width: 100%;border-bottom: 1px solid #ececec;box-sizing: border-box;zoom:1;overflow: hidden;padding-bottom: 0.0853rem;}
+.news-content-item .news-content-item-head .news-content-item-head-left{width: 21.3333%;height:100%;float: left;}
+.news-content-item .news-content-item-head .news-content-item-head-left img{border-radius:8px;height:0.512rem;width: 75%;margin:0.3rem 12.5%;border-radius: 100px;}
+.news-content-item .news-content-item-head .news-content-item-head-right{width: 78.6666%;float: left;position: relative;}
+.news-content-item .news-content-item-head .news-content-item-head-right h3{font-weight: 400;font-size: 0.1365rem;line-height:0.6826rem;}
+.news-content-item .news-content-item-head .news-content-item-head-right h4{font-size: 0.128rem;font-weight: 400;margin:0.0853rem 0px; }
+.news-content-item .news-content-item-head .news-content-item-head-right p{color:#999;width: 96.6101%;color:#666;}

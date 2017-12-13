@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>免安装游戏</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/movieGame/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/movieGame/main.css">
+    <script type="text/javascript" src="js/movieGame/jquery.min.js"></script>
+    <script type="text/javascript" src="js/movieGame/swiper-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/movieGame/layout.js"></script>
+    <script type="text/javascript" src="js/movieGame/main.js"></script>
+</head>
+<body>
+<{if $BANNERLIST!=""}>
+<div class="index-head">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <{section name=BANNERLOOP loop=$BANNERLIST}>
+            <div class="swiper-slide">
+                <a href="<{$BANNERLIST[BANNERLOOP].url}>&from=26"><img src="<{$BANNERLIST[BANNERLOOP].pic}>"></a>
+            </div>
+            <{/section}>
+        </div>
+    </div>
+</div>
+<div class="cHr"></div>
+<{/if}>
+    <div class="index-hot-game">
+        <{section name=HOTBANNERLOOP loop=$HOTBANNERLIST}>
+        <div class="index-hot-item">
+            <div class="index-hot-item-left">
+                <img src="<{$HOTBANNERLIST[HOTBANNERLOOP].img}>" alt="">
+            </div>
+            <div class="index-hot-item-right">
+                <{if $HOTBANNERLIST[HOTBANNERLOOP].introduce != ""}>
+                <a href="/project/index.php?r=partner/Game/Gamedetail&gid=<{$HOTBANNERLIST[HOTBANNERLOOP].gid}>&from=11">
+                    <{/if}>
+                    <h3><{$HOTBANNERLIST[HOTBANNERLOOP].gname}></h3>
+                    <p class="notice"><{$HOTBANNERLIST[HOTBANNERLOOP].describe}></p>
+                    <p class="tip"><{$HOTBANNERLIST[HOTBANNERLOOP].num_people}></p>
+                    <{if $HOTBANNERLIST[HOTBANNERLOOP].introduce != ""}>
+                </a>
+                <{/if}>
+                <button onclick="getAJAX('<{$HOTBANNERLIST[HOTBANNERLOOP].gid}>')">打开</button>
+            </div>
+        </div>
+        <{/section}>
+
+    </div>
+    <div class="index-bottom-line" style="visibility:hidden">
+        <p>人家是有底线的</p>
+    </div>
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        direction: 'horizontal',
+        loop: true,
+        autoplay : 3000
+    });
+
+    $(window).scroll(function() {
+        if ($(document).scrollTop() >= $(document).height() - $(window).height()) {
+            $('.index-bottom-line').css('visibility','visible');
+            setTimeout("remainTime()",2000);
+        }
+    });
+
+    function remainTime(){
+        $('.index-bottom-line').css('visibility','hidden');
+    }
+
+    function getAJAX(gid){
+        var jsonData = {gid:gid};
+        $.ajax({
+            url: "/project/index.php?r=partner/Game/Install",
+            data: jsonData,
+            type: "post",
+            success: function (data) {
+                var json_str = JSON.parse(data);
+                if(json_str.ERRORGAME == 0){
+                    alert("请选择正确的下载/打开列表");
+                    location.href = json_str.HREF;
+                }else if(json_str.ERRORGAME == "isWeixin"){
+                    $('.hide-tip').css("display","block");
+                }else{
+                    location.href = json_str.HREF;
+                }
+            },error: function (error) {
+
+            }
+        });
+    }
+
+</script>
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</body>
+</html>

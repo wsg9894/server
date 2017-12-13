@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>领取成功</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/style.css">
+    <style>
+	
+    </style>
+</head>
+<body style="background-color:#63a72a">
+    <div id="share-result">
+        <img src="images/result.png" alt="">
+        <p style="font-size:0.16rem;"><span>领取成功</span></p>
+        <!--<p style="top:1.3rem;">￥<span>10元</span><br>《我不是潘金莲》现金券<br>￥<span>10元</span><br>E票网通用现金券</p>-->
+		<p style="top:1.3rem;">
+		<{section name=PRIZELOOP loop=$PRIZELIST}>
+		￥<span><{$PRIZELIST[PRIZELOOP].mVoucherMoney}>元</span><br><{$PRIZELIST[PRIZELOOP].sVoucherName}><br>
+		<{/section}>
+		</p>
+<!--
+        <a href="<{$BASEURL}>cinema/movieselect.php">
+            <input type="button" value="快速兑换电影票">
+        </a>
+-->
+    </div>
+
+    <script type="text/javascript">
+    window.onload=function(){
+        var width=window.innerWidth;
+        if(width>=640){
+            width=640;
+        }
+        var html=document.getElementsByTagName("html")[0];
+        html.style.fontSize=width/3.2+"px";
+        var body=document.getElementsByTagName("body")[0];
+        body.style.width=width+"px";
+    }
+    window.onresize=function(){
+        var width=window.innerWidth;
+        if(width>=640){
+            width=640;
+        }
+        var html=document.getElementsByTagName("html")[0];
+        html.style.fontSize=width/3.2+"px";
+        var body=document.getElementsByTagName("body")[0];
+        body.style.width=width+"px";
+    }
+    </script>
+<div style="display:none">
+<script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228"></script>
+</div>
+</body>
+</html>

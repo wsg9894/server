@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>查看订单</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/main.css">
+    <script type="text/javascript" src="js/scoreStore/layout.js"></script>
+</head>
+<body class="order">
+    <div class="address">
+        <p>收货人：<{$ADDRESSINFO.receiver_name}><span style="float: right"><{$ADDRESSINFO.receiver_phone}></span></p>
+        <p class="address" style="width: 100%;color:#999">收货地址：<{$ORDERINFO.order_address}></p>
+    </div>
+    <div class="detail">
+        <div class="detailItem">
+            <img src="<{$GOODSINFO.list_pic}>">
+        </div>
+        <div class="detailItem" style="width: 73.3333%;">
+            <h3><{$ORDERINFO.order_name}></h3>
+            <p class="type">
+                <{section name=VALUELOOP loop=$ORDERINFO.attribute}>
+                <span><{$ORDERINFO.attribute[VALUELOOP]}></span>
+                <{/section}>
+            </p>
+            <p class="sPrice"><{if $ORDERINFO.goods_extra_tprice>0}>￥<{$ORDERINFO.goods_extra_tprice}>+<{/if}><{$ORDERINFO.goods_tprice}>E豆<span>×<{$ORDERINFO.goods_num}></span></p>
+            <!--<p class="num">数量：<span id="value"><{$ORDERINFO.goods_num}></span></p>-->
+            <!--<p class="sPrice">价格：<span><{$ORDERINFO.goods_tprice}>E豆<{if $ORDERINFO.goods_extra_tprice>0}>+<{$ORDERINFO.goods_extra_tprice}>元<{/if}></span></p>-->
+        </div>
+    </div>
+    <div class="wayMoney">
+		<{if $GOODSINFO.send_cost>0}>
+		<p>运费：<span>元</span><span class="pri"><{$GOODSINFO.send_cost}></span></p>
+		<{else}>
+		<p>运费：<span class="pri">免运费</span></p>
+		<{/if}>
+    </div>
+    <h4 style="text-align: left;font-weight: 400;padding-left: 0.0853rem;font-size: 0.128rem;line-height: 0.4266rem;">物流信息</h4>
+    <!--<span><{if $ORDERINFO.order_status==-1}>已取消<{elseif $ORDERINFO.order_status==1}>待付款<{elseif $ORDERINFO.order_status==2}>待发货<{elseif $ORDERINFO.order_status==3}>已发货<{else}>未知<{/if}></span>-->
+    <div class="ways">
+		<{if $ORDERINFO.order_status==3}>
+        <p>已发货，快递单号：<{$ORDERINFO.express_no}></p>
+		<{/if}>
+    </div>
+    
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</body>
+</html>

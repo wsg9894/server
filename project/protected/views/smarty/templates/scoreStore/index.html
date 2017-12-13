@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>E豆商城</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/scoreStore/main.css">
+    <script type="text/javascript" src="js/scoreStore/layout.js"></script>
+    <script type="text/javascript" src="js/scoreStore/swiper-3.4.0.min.js"></script>
+</head>
+<body class="index">
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <{section name=BANNERLOOP loop=$BANNERLIST}>
+        <div class="swiper-slide">
+            <a href="<{$BANNERLIST[BANNERLOOP].url}>"><img src="<{$BANNERLIST[BANNERLOOP].pic}>"></a>
+        </div>
+        <{/section}>
+    </div>
+    <div class="swiper-pagination"></div>
+</div>
+<div id="menu-group">
+    <a href="/project/index.php?r=scoreStore/Site/Tasks">
+        <div class="menu-item">
+            <img src="images/scoreStore/index_02.png">
+            <img class="red" src="images/scoreStore/..png">
+            <p>任务专栏</p>
+        </div>
+    </a>
+    <a href="/project/index.php?r=scoreStore/Site/myScore">
+        <div class="menu-item">
+            <img src="images/scoreStore/index_03.png">
+            <p>我的E豆</p>
+            <span><{if $UINFO.iCurScore>0}><{$UINFO.iCurScore}><{else}>0<{/if}></span>
+        </div>
+    </a>
+    <div class="hr-v" style="left:50%;"></div>
+    <{if empty($TIPINFO.tipLink)}>
+    <p id="Esaid">小E说：<{$TIPINFO.tipCont}></p>
+    <{else}>
+    <a href="<{$TIPINFO.tipLink}>"><p id="Esaid">小E说：<{$TIPINFO.tipCont}></p></a>
+    <{/if}>
+</div>
+<div id="banner-group">
+    <!--首推荐位-->
+	<{if !empty($RECOMMENDINFO.firstPicUrl)}>
+    <div class="banner-item banner1">
+        <{if $RECOMMENDINFO.firstGoodsID!=0}>
+        <a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=<{$RECOMMENDINFO.firstGoodsID}>"><img src="<{$RECOMMENDINFO.firstPicUrl}>"></a>
+        <{else}>
+        <a href="<{$RECOMMENDINFO.firstLink}>"><img src="<{$RECOMMENDINFO.firstPicUrl}>"></a>
+        <{/if}>
+    </div>
+	<{/if}>
+
+    <!--次推荐位-->
+	<{if !empty($RECOMMENDINFO.secondPicUrl)}>
+    <div class="banner-item banner1">
+        <{if $RECOMMENDINFO.secondGoodsID!=0}>
+        <a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=<{$RECOMMENDINFO.secondGoodsID}>"><img src="<{$RECOMMENDINFO.secondPicUrl}>"></a>
+        <{else}>
+        <a href="<{$RECOMMENDINFO.secondLink}>"><img src="<{$RECOMMENDINFO.secondPicUrl}>"></a>
+        <{/if}>
+    </div>
+	<{/if}>
+</div>
+<!--商品class偶数+right-->
+
+<div id="good-group">
+    <{section name=GOODSLOOP loop=$GOODSLIST}>
+    <{if $smarty.section.GOODSLOOP.index%2==0}>
+    <div class="good-box">
+        <{/if}>
+        <a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=<{$GOODSLIST[GOODSLOOP].gid}>">
+            <div class="good">
+                <div class="photo">
+                    <img src="<{$GOODSLIST[GOODSLOOP].list_pic}>">
+					<p class="sub"><{$GOODSLIST[GOODSLOOP].list_name}></p>
+					<{if $GOODSLIST[GOODSLOOP].allow_day<=0}>
+					<p class="price"><{if $GOODSLIST[GOODSLOOP].extra_price>0}>￥<{$GOODSLIST[GOODSLOOP].extra_price}>+<{/if}><{$GOODSLIST[GOODSLOOP].price}>E豆<span style="float:left;position:relative;top:0.01rem"><img src="images/over.png" style="width:0.3rem;"></span></p>
+					<{else}>
+					<p class="price"><{if $GOODSLIST[GOODSLOOP].extra_price>0}>￥<{$GOODSLIST[GOODSLOOP].extra_price}>+<{/if}><{$GOODSLIST[GOODSLOOP].price}>E豆</p>
+					<{/if}>
+                </div>
+            </div>
+        </a>
+        <{if $smarty.section.GOODSLOOP.index%2==1}>
+    </div>
+    <{/if}>
+    <{/section}>
+</div>
+<div id="footer">
+    <img src="images/scoreStore/logo.png">
+</div>
+<div id="index-foot">
+    <div class="index-foot-item">
+        <a href="/index.php">
+            <img src="/public/front-2.0/images/index_0.png" alt="">
+            <p>首页</p>
+        </a>
+    </div>
+    <div class="index-foot-item">
+        <a href="/cinema/movieselect.php">
+            <img src="/public/front-2.0/images/ticket_0.png" alt="">
+            <p>购票</p>
+        </a>
+    </div>
+	<div class="index-foot-item">
+        <a href="/project/index.php?r=partner/Game/Index&from=15">
+            <img src="/public/front-2.0/images/game_0.png" alt="">
+            <p>游戏</p>
+        </a>
+    </div>
+    <div class="index-foot-item active">
+        <img src="/public/front-2.0/images/shop_1.png" alt="">
+        <p>商城</p>
+    </div>
+    <div class="index-foot-item">
+        <a href="/usercenter/UserCenterIndex.html">
+            <img src="/public/front-2.0/images/my_0.png" alt="">
+            <p>我的</p>
+        </a>
+    </div>
+</div>
+<style>
+    #index-foot{width: 3.2rem;height: 0.4179rem;background-color: #fff;border-top: 1px solid #ccc;position: fixed;bottom: 0px;}
+    #index-foot .index-foot-item.active p{color:#1dd087;}
+    #index-foot .index-foot-item{width: 20%;float: left;height: 100%;}
+    #index-foot .index-foot-item img{width: 32%;margin: 0.0213rem auto;margin-bottom:0px;display: block;}
+    #index-foot .index-foot-item p{text-align:center;font-size: 0.0853rem;color:#999;}
+    #index-foot a{ color:#333;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        display: block;
+        text-decoration: none;
+    }
+</style>
+<script>
+    var mySwiper = new Swiper ('.swiper-container', {
+        direction: 'horizontal',
+        loop: true,
+        autoplay:3000,
+        pagination: '.swiper-pagination',
+    })
+</script>
+
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</body>
+</html>

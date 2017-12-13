@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>我的E豆</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/scoreStore/main.css">
+    <script type="text/javascript" src="js/scoreStore/layout.js"></script>
+    <script type="text/javascript" src="js/scoreStore/swiper-3.4.0.min.js"></script>
+	<script type="text/javascript">
+		function counting(obj,time){
+			var timeP=document.querySelector('.time'+obj);
+			var times;
+			var interv=setInterval(function(){
+				if(time>0){
+					var min=Math.floor(time/60)
+					var sec=time-min*60;
+					if(min<10){
+						min="0"+min
+					}
+					if(sec<10){
+						sec="0"+sec
+					}
+					time--
+					timeP.innerHTML=min+":"+sec
+				}else{
+					timeP.innerHTML="支付时间结束"
+					clearInterval(interv)
+				}
+			},1000)
+		}
+	</script>
+</head>
+<body class="my">
+    <div id="head">
+        <img src="images/scoreStore/my_01.png">
+    </div>
+    <div id="menu-group">
+        <a href="/project/index.php?r=scoreStore/Site">
+        <div class="menu-item">
+            <img src="images/scoreStore/my_0.png">
+            <p>换周边</p>
+        </div>
+        </a>
+        <a href="/project/index.php?r=scoreStore/Site/Tasks">
+        <div class="menu-item">
+            <img src="images/scoreStore/index_02.png">
+            <img class="red" src="images/scoreStore/..png">
+            <p>任务专栏</p>
+        </div>
+        </a>
+         <a href="#">
+        <div class="menu-item">
+            <img src="images/scoreStore/index_03.png">
+            <p>我的E豆</p>
+            <span><{$UINFO.iCurScore}></span>
+        </div>
+        </a>
+       <div class="hr-v" style="left:33.3333%;"></div>
+        <div class="hr-v" style="left:66.6667%;"></div>
+    </div>
+    <div id="tab-group">
+        <div class="bar-group">
+            <div class="tabbar active">
+                <p>兑换商品</p>
+            </div>
+            <div class="tabbar">
+                <p>E豆明细</p>
+            </div>
+        </div>
+        <div class="tabContent active">
+			<{section name=MYORDERLOOP loop=$MYORDERLIST}>
+            <div class="tabContetItem">
+                <p><{$MYORDERLIST[MYORDERLOOP].order_name}><span>×<{$MYORDERLIST[MYORDERLOOP].goods_num}></span></p>
+                <p><{$MYORDERLIST[MYORDERLOOP].createtime}><span>-<{$MYORDERLIST[MYORDERLOOP].goods_tprice}></span></p>
+				
+				<{if $MYORDERLIST[MYORDERLOOP].goodsInfo.voucher_id>0}>
+				<p>请到<a href="/usercenter/UserVoucher.html">‘我的优惠券’-现金券</a>中查看
+				<{elseif $MYORDERLIST[MYORDERLOOP].goodsInfo.third_id>0}>
+				<p>请到<a href="/usercenter/UserVoucher.html?type=play">‘我的优惠券’-娱乐券</a>中查看
+				<{elseif $MYORDERLIST[MYORDERLOOP].goodsInfo.coupon_id>0}>
+				<p>请到<a href="/usercenter/UserMovieCard.html">‘我的电影卡’</a>中查看
+				<{elseif $MYORDERLIST[MYORDERLOOP].order_status==1}>
+				<p>
+				<a href="/project/index.php?r=scoreStore/Site/OrderDetail&oid=<{$MYORDERLIST[MYORDERLOOP].oid}>" style="text-de">订单详情</a>
+				<a href="/project/index.php?r=scoreStore/Site/OrderPay&oid=<{$MYORDERLIST[MYORDERLOOP].oid}>"><input class="commit active" type="button" value="继续支付"></a>
+				<a href="/project/index.php?r=scoreStore/Site/CancelOrder&oid=<{$MYORDERLIST[MYORDERLOOP].oid}>"><input class="cancel active" type="button" value="取消订单"></a>
+				</p>
+ 				<p class="time<{$MYORDERLIST[MYORDERLOOP].oid}>" style="text-align:right;color:#f6665e">倒计时...</p>
+				<script type="text/javascript">counting(<{$MYORDERLIST[MYORDERLOOP].oid}>,<{$MYORDERLIST[MYORDERLOOP].countDown}>)</script>
+				<{else}>
+				<p><a href="/project/index.php?r=scoreStore/Site/OrderDetail&oid=<{$MYORDERLIST[MYORDERLOOP].oid}>">订单详情</a>
+				</p>
+				<{/if}>
+           </div>
+			<{/section}>
+        </div>
+        <div class="tabContent">
+			<{section name=SLOGLOOP loop=$MYSCORELOGLIST}>
+			<div class="tabContetItem">
+				<p><{$MYSCORELOGLIST[SLOGLOOP].desc}><span></span></p>
+				<p><{$MYSCORELOGLIST[SLOGLOOP].createtime}><span>+<{$MYSCORELOGLIST[SLOGLOOP].score}></span></p>
+			</div>
+			<{/section}>
+
+        </div>
+    </div>
+	<script>    
+    window.onload=function(){
+        var tabbars=document.querySelectorAll(".tabbar")
+        var tabcontents=document.querySelectorAll(".tabContent")
+        for(var i=0;i<tabbars.length;i++){
+            tabbars[i].i=i;
+            tabbars[i].onclick=function(){
+                for(var j=0;j<tabbars.length;j++){
+                    tabbars[j].className="tabbar"
+                    tabcontents[j].className="tabContent"
+                }
+                tabbars[this.i].className="tabbar active"
+                tabcontents[this.i].className="tabContent active"
+            }
+        }
+    }    
+	</script>
+
+</body>
+<div style="display:none">
+<script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228"></script>
+</div>
+</html>

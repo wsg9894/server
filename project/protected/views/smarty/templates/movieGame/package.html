@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>游戏礼包</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/movieGame/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/movieGame/main.css">
+    <script type="text/javascript" src="js/movieGame/jquery.min.js"></script>
+    <script type="text/javascript" src="js/movieGame/swiper-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/movieGame/layout.js"></script>
+    <script type="text/javascript" src="js/movieGame/main.js"></script>
+    <style>
+        #text{
+            text-align: left;
+            width: 53%;
+            height: 0.11rem;
+            border: none;
+            resize:none;
+            outline:none;
+            background-color: #fff;
+        }
+        button{
+            outline:none;
+        }
+    </style>
+</head>
+<body>
+<{foreach from="$GAMELIST" item="GAMEINFO"}>
+<{if $GAMEINFO.num_package!=0}>
+<div class="package-game">
+
+    <div class="package-game-left">
+        <img src="<{$GAMEINFO.img}>" alt="">
+    </div>
+    <div class="package-game-right">
+
+        <div class="package-game-head">
+            <h3><{$GAMEINFO.gname}></h3>
+            <p><{$GAMEINFO.describe}></p>
+            <span>共<{$GAMEINFO.num_package}>个礼包</span>
+            <img src="images/movieGame/toupdown_0.png" alt="" class="button">
+        </div>
+        <{foreach from="$GAMEPACKAGELIST" item="PACKAGELIST"}>
+        <{if $PACKAGELIST.gid == $GAMEINFO.gid}>
+        <div class="package-game-item">
+            <{if $PACKAGELIST.num_count > 0}>
+            <a href="/project/index.php?r=partner/Game/Packagedetail&pid=<{$PACKAGELIST.pid}>&from=9">
+                <h3><{$PACKAGELIST.name}></h3>
+                <p><{$PACKAGELIST.info}></p>
+                <span><{if $PACKAGELIST.getCount == 0}>限领一次<{else}>每日领取<{/if}></span>
+            </a>
+            <button class="active" onclick="getAJAX('<{$PACKAGELIST.pid}>')">领取</button>
+            <{else}>
+            <a href="/project/index.php?r=partner/Game/Packagedetail&pid=<{$PACKAGELIST.pid}>&from=9">
+                <h3><{$PACKAGELIST.name}></h3>
+                <p><{$PACKAGELIST.info}></p>
+                <span><{if $PACKAGELIST.getCount == 0}>限领一次<{else}>每日领取<{/if}></span>
+            </a>
+            <button>已领完</button>
+            <{/if}>
+        </div>
+        <{/if}>
+        <{/foreach}>
+
+    </div>
+
+</div>
+<{/if}>
+<{/foreach}>
+
+<div class="get-success " >
+
+</div>
+
+    <div class="index-bottom-line" style="visibility:hidden">
+        <p>没有更多礼包了</p>
+    </div>
+<div class="game-href" style="position:fixed;z-index: 1000;left: 10%;bottom: 4%;width: 15%;height: 15%;">
+    <a href="/project/index.php?r=partner/Game/Index&from=9"><img src="images/movieGame/gamehref.png" style="width: 100%;float: right;margin-right: 0.0853rem;margin-top: 0.0853rem;" ></a>
+</div>
+<script type="text/javascript" src="js/movieGame/package.js"></script>
+<script type="text/javascript">
+
+    //ajax请求
+    function getAJAX(pid){
+        var jsonData = {pid:pid};
+        $.ajax({
+            url: "/project/index.php?r=partner/Game/GetPackage",
+            data: jsonData,
+            type: "post",
+            success: function (data) {
+                var json_str = JSON.parse(data);
+                var str = "";
+                switch (json_str.ERRORPACKAGE){
+                    case 0:
+                        str +='<div class="get-success-content">'
+                                +'<img class="closeImg" src="images/movieGame/close.png">'
+                                +'<h3>领取成功</h3>'
+                                +'<img src="images/movieGame/gift.png" alt="">'
+                                +'<h4>'+json_str.data["name"]+'</h4>'
+                                +'<p style="text-align: right;">兑换码：<textarea id="text">'+json_str.data["passCode"]+'</textarea></p>'
+                                +'<span>已保存到我的游戏-礼包</span>'
+                                +'<div>'
+                                +'<div class="ok">'
+                                +'<a href="/project/index.php?r=partner/Game/Packagedetail&pid='+json_str.data["pid"]+'&from=9"><p>使用说明</p></a>'
+                                +'</div>'
+                                +'<div class="copy">'
+                                +'<p id="btn" onclick="copy()">长按兑换码复制</p>'
+                                +'</div>'
+                                +'</div>'
+                                +'</div>';
+                        break;
+                    case 1:
+                        str +='<div class="get-success-content">'
+                                +'<img class="closeImg" src="images/movieGame/close.png">'
+                                +'<h3>'+json_str.data+'</h3>'
+                                +'<img src="images/movieGame/gift.png" alt="">'
+                                +'<div>'
+                                +'<div class="copy" style="width:100%;">'
+                                +'<p onclick="copy(1)">确定</p>'
+                                +'</div>'
+                                +'</div>'
+                                +'</div>';
+                        break;
+                    case 2:
+                        str +='<div class="get-success-content">'
+                                +'<img class="closeImg" src="images/movieGame/close.png">'
+                                +'<h3>'+json_str.data+'</h3>'
+                                +'<img src="images/movieGame/gift.png" alt="">'
+                                +'<div>'
+                                +'<div class="copy" style="width:100%;">'
+                                +'<p onclick="copy(1)">确定</p>'
+                                +'</div>'
+                                +'</div>'
+                                +'</div>';
+                        break;
+                    case 3:
+                        str +='<div class="get-success-content">'
+                                +'<img class="closeImg" src="images/movieGame/close.png">'
+                                +'<h3>您今日已经领取该游戏礼包</h3>'
+                                +'<img src="images/movieGame/gift.png" alt="">'
+                                +'<h4>'+json_str.data["name"]+'</h4>'
+                                +'<p style="text-align: right;">兑换码：<textarea id="text">'+json_str.data["passCode"]+'</textarea></p>'
+                                +'<span>已保存到我的游戏-礼包</span>'
+                                +'<div>'
+                                +'<div class="ok">'
+                                +'<a href="/project/index.php?r=partner/Game/Packagedetail&pid='+json_str.data["pid"]+'&from=9"><p>使用说明</p></a>'
+                                +'</div>'
+                                +'<div class="copy">'
+                                +'<p id="btn" onclick="copy()">长按兑换码复制</p>'
+                                +'</div>'
+                                +'</div>'
+                                +'</div>';
+                        break;
+                    case 4:
+                        str +='<div class="get-success-content">'
+                                +'<img class="closeImg" src="images/movieGame/close.png">'
+                                +'<h3>您已领取该游戏的礼包</h3>'
+                                +'<img src="images/movieGame/gift.png" alt="">'
+                                +'<h4>'+json_str.data["name"]+'</h4>'
+                                +'<p style="text-align: right;">兑换码：<textarea readonly id="text">'+json_str.data["passCode"]+'</textarea></p>'
+                                +'<span>已保存到我的游戏-礼包</span>'
+                                +'<div>'
+                                +'<div class="ok">'
+                                +'<a href="/project/index.php?r=partner/Game/Packagedetail&pid='+json_str.data["pid"]+'&from=9"><p>使用说明</p></a>'
+                                +'</div>'
+                                +'<div class="copy">'
+                                +'<p id="btn" onclick="copy()">长按兑换码复制</p>'
+                                +'</div>'
+                                +'</div>'
+                                +'</div>';
+                        break;
+                    case 5:
+                        window.location.href=json_str.data;
+                        break;
+                }
+                $('.get-success').html(str);
+                $('.get-success').addClass('active');
+                $('.closeImg').eq(0)[0].onclick=function(){
+                    $('.get-success').removeClass('active')
+                }
+            },error: function (error) {
+
+            }
+        });
+    }
+
+    function copy(flag){
+        if(flag == undefined || flag == "undefined"){
+            var button=document.getElementById("btn");
+            document.getElementById("text").select();
+            document.execCommand("copy",false,null);
+            $('.get-success').removeClass('active');
+        }else{
+            $('.get-success').removeClass('active');
+        }
+    }
+
+    $(window).scroll(function() {
+        if ($(document).scrollTop() >= $(document).height() - $(window).height()) {
+            $('.index-bottom-line').css('visibility','visible');
+            setTimeout("remainTime()",2000);
+        }
+    });
+
+    function remainTime(){
+        $('.index-bottom-line').css('visibility','hidden');
+    }
+
+</script>
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</body>
+</html>

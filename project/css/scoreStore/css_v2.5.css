@@ -1,0 +1,54 @@
+*{
+	margin: 0px;
+	padding: 0px;
+	font-family: Microsoft Yahei;
+}
+html{
+    font-size: 100px;
+    margin: 0px auto;
+}
+body{
+	font-size:0.1rem;
+	position: relative;
+	height: 100%;
+}
+.order-head{width: 100%;height: 0.8533rem;background-color: #fff;position: relative}
+.order-head h3{font-size: 0.128rem;font-weight: 400;width: 94.6666%;margin:0px auto;margin-top: 0.1766rem;}
+.order-head h3 small{float: right;margin-right:0.256rem;}
+.order-head img{position: absolute;right:0.0853rem;height:20%;top:40%;}
+.order-head p{font-size: 0.1024rem;width: 94.6666%;margin:0px auto;margin-top:0.0426rem;}
+.good-head{background-color: #fff;margin-top: 0.0853rem;}
+.good-head-title{width: 100%;height: 0.8533rem;border-bottom: 0.004266rem solid #e2e2e2;}
+.good-head-left{width: 26.6666%;height: 100%;float: left;}
+.good-head-left img{width: 80%;height: 80%;display: block;margin:10% auto;}
+.good-head-right{width: 73.3333%;height: 100%;float: left;position: relative;}
+.good-head-right h3{font-size: 0.128rem;font-weight: 400;width: 94.6666%;margin-top: 0.0853rem;}
+.good-head-right p{font-size: 0.128rem;color:#ff2e2e;width: 94.6666%;position: absolute;bottom:0.0853rem;}
+.good-head-right p span{float: right;color:#000;}
+.good-type-item{padding-top:0.128rem;overflow: hidden;zoom:1;border-bottom: 0.004266rem solid #e2e2e2;}
+.good-type-item-left{width: 26.6666%;float: left;}
+.good-type-item-left p{width: 80%;margin: 0px auto;text-align: center;}
+.good-type-item-right{width: 73.3333%;float: left;}
+.good-type-item-right .type-item{width: 29%;float: left;border:1px solid #ff9a50;border-radius: 4px;margin-right: 2%;margin-bottom: 0.128rem;color:#ff9a50;text-align: center;line-height: 0.192rem;}
+.good-type-item-right .type-item.active{color:#fff;background-color: #ff9a50}
+.good-mun{width:100%;height:0.4266rem;border-bottom:0.004266rem solid #e2e2e2;}
+.good-mun p{line-height: 0.4266rem;width: 94.6666%;margin:0px auto;font-size: 0.128rem;}
+.good-mun small{color:#ff2e2e;margin-left: 2%;font-size: 0.1024rem;}
+.good-mun span{float: right;}
+.good-mun span .chNum{width: 0.1706rem;height:0.1706rem;border:none;font-size: 0.1024rem;border-radius: 4px;background-color:#ddd;-webkit-appearance: none}
+.good-mun span .active{background-color: #ff9a50;color:#fff;}
+.good-mun span strong{display: inline-block;padding:0px 0.128rem;font-weight: 400;font-size: 0.1024rem;}
+.good-roadway{height: 0.4266rem;border-bottom: 0.004266rem solid #e2e2e2;}
+.good-roadway p{width: 94.6666%;margin:0px auto;line-height: 0.4266rem;font-size: 0.128rem}
+.good-roadway p span{float: right;color: #ff2e2e;font-size: 0.1024rem;}
+.pay-head{background-color: #fff;}
+.pay-head .pay-item{height: 0.4266rem;border-bottom: 0.004266rem solid #e2e2e2;line-height: 0.4266rem;position: relative;}
+.pay-head .pay-item p{width: 94.6666%;margin: 0px auto;font-size: 0.128rem;}
+.pay-head .pay-item .pay-item-check{width: 0.1706rem;height: 0.1706rem;position: absolute;top: 0.128rem;right:0.128rem;background-color: #ccc;border-radius: 100px;font-size: 0px;}
+.pay-head .pay-item .pay-item-check img{width: 100%;position: relative;top: -5px;}
+.pay-head .pay-item.active .pay-item-check{background-color: #ff9a50}
+.pay-commit{position: fixed;width: 3.2rem;bottom: 0px;background-color: #fff;height: 0.4266rem;}
+.pay-commit-left{width: 57.3333%;float: left;line-height: 0.4266rem;text-align: center;font-size: 0.128rem}
+.pay-commit-left span{color:#ff9a50;}
+.pay-commit-right{width: 42.6666%;float: left;height: 100%;font-size: 0px;}
+.pay-commit-right .btn{width: 100%;height: 100%;border:none;font-size: 0.128rem;background-color: #ff9a50;color: #fff;-webkit-appearance: none}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>收货地址</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/main.css">
+    <script type="text/javascript" src="js/scoreStore/layout.js"></script>
+</head>
+<body class="address">
+	<{section name=USERADDRESSLOOP loop=$USERADDRESSLIST}>
+    <div class="address">
+        <label><input type="radio" name="address" <{if $USERADDRESSLIST[USERADDRESSLOOP].is_def}>checked<{/if}> onclick="if (this.checked){window.location='/project/index.php?r=scoreStore/Site/goodsOrder&gid=<{$GID}>&aid=<{$USERADDRESSLIST[USERADDRESSLOOP].aid}>'}" value="<{$USERADDRESSLIST[USERADDRESSLOOP].aid}>" <{if $USERADDRESSLIST[USERADDRESSLOOP].aid==$AID}>checked<{/if}>>
+            <p><{$USERADDRESSLIST[USERADDRESSLOOP].receiver_name}><span><{$USERADDRESSLIST[USERADDRESSLOOP].receiver_phone}></span></p>
+            <p class="address"><{$USERADDRESSLIST[USERADDRESSLOOP].area}> <{$USERADDRESSLIST[USERADDRESSLOOP].address}></p>
+        </label>
+        <a href="/project/index.php?r=scoreStore/Site/UpdateAddress&gid=<{$GID}>&aid=<{$USERADDRESSLIST[USERADDRESSLOOP].aid}>"><img src="images/scoreStore/address_0.png"></a>
+        <p class="default <{if $USERADDRESSLIST[USERADDRESSLOOP].is_def}>active<{/if}>">默认</p>
+    </div>
+	<{/section}>
+    <div class="commit">
+        <a href="/project/index.php?r=scoreStore/Site/AddAddress&gid=<{$GID}>"><input type="button" value="新建地址"></a>
+    </div>
+</body>
+<script>
+    var height=window.innerHeight;
+	var html=document.getElementsByTagName("html")[0];
+	if(html.offsetHeight<height){
+		html.style.height=height+'px'
+	}
+</script>
+</html>

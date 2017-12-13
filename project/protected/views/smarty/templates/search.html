@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<head>
+<title>搜索Demo</title>
+<meta charset="utf-8">
+<style type="text/css">
+.list_1 {
+    ul {}
+    li {
+        border-bottom: 1px solid #ddd;padding:0 1.6rem;
+        a {display: block;height: 4rem;line-height: 4rem;overflow: hidden;font-size: 1.4rem;}
+    }
+}
+</style> 
+</head> 
+
+<html>
+<body>
+
+<form action="/project/index.php?r=scoreStore/Test/Search" method="post">
+支持中文/拼音/简拼: <input type="input" list="url_list" name="searchStr" />
+<datalist id="url_list">
+	<option label="中文" value="金逸" />
+	<option label="pinyin" value="jinyi" />
+	<option label="简拼" value="jy" />
+</datalist>
+<input type="submit" value="搜索（北京、影院）"/>
+</form>
+
+
+<div class="list_1">
+	<{if !empty($SEARCHSTR)}>
+	<ul>
+        <li>北京 找到 <{$CINEMACOUNT}> 条符合搜索条件“<{$SEARCHSTR}>”的影院。</li>
+	</ul>
+	<{/if}>
+    <ul>
+		<{section name=CINEMALOOP loop=$CINEMALIST}>
+		<li><a href="/cinema/cinema.php?cinemaId=<{$CINEMALIST[CINEMALOOP].iCinemaID}>" target="_blank"><{$CINEMALIST[CINEMALOOP].sCinemaName}></a>&nbsp;&nbsp;全拼：<{$CINEMALIST[CINEMALOOP].allP}>&nbsp;&nbsp;简拼：<{$CINEMALIST[CINEMALOOP].firP}></li>
+		<{/section}>
+    </ul>
+</div>
+
+</body>
+</html>

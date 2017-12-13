@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>领取礼包</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/scoreStore/main.css">
+    <script type="text/javascript" src="js/scoreStore/layout.js"></script>
+    <script type="text/javascript" src="js/scoreStore/swiper-3.4.0.min.js"></script>
+</head>
+<body class="invite">
+    <div class="head">
+        <img class="headBg" src="images/scoreStore/invite_01.jpg">
+		<{if $SENDPRIZEFLAG}>
+        <div class="headItems">
+            <img src="images/scoreStore/invite_03.png">
+            <div class="content <{if count($PRIZELIST)==1}>one<{elseif count($PRIZELIST)==2}>two<{else}>three<{/if}>">
+				<{section name=PRIZELOOP loop=$PRIZELIST}>
+                <div class="pItem">
+                    <p><span>￥<{$PRIZELIST[PRIZELOOP].mVoucherMoney}></span></p>
+					<p><{$PRIZELIST[PRIZELOOP].sVoucherName}></p>
+                </div>
+				<{/section}>
+               <p class="sub">已发送至您的账户<a href="/cinema/movieselect.php">去购票</a></p>
+            </div>
+        </div>
+
+		<a href="/project/index.php?r=scoreStore/Site/Invite"><input type="button" class="lmore" value="分享给新朋友，获取你的观影礼包！"></a>
+
+		<!--<a href="/project/index.php?r=scoreStore/Site/Invite"><input type="button" class="lmore" value="想要情人节礼包，立即分享给新朋友！"></a>-->
+		<{else}>
+        <div class="nonono">
+            <img src="images/scoreStore/invite_04.png">
+            <a href="/project/index.php?r=scoreStore/Site/Invite"><input type="button" value="分享给新朋友，获取你的观影礼包！"></a>
+        </div>
+        <!--<div class="nonono">-->
+            <!--<img src="images/scoreStore/invite_04.png">-->
+            <!--<a href="/project/index.php?r=scoreStore/Site/Invite"><input type="button" value="想要情人节礼包，立即分享给新朋友！"></a>-->
+        <!--</div>-->
+		<{/if}>
+        <p class="headFoot">E豆兑换商品推荐</p>
+    </div>
+
+	<div id="good-group">
+        <div class="good-box">
+			<{section name=GOODSLOOP loop=$GOODSLIST}>
+            <a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=<{$GOODSLIST[GOODSLOOP].gid}>">
+            <div class="good <{if $smarty.section.GOODSLOOP.index%2==1}>right<{/if}>">
+                <div class="photo">
+                    <img src="<{$GOODSLIST[GOODSLOOP].list_pic}>">
+                </div>
+                <p class="sub"><{$GOODSLIST[GOODSLOOP].list_name}></p>
+                <p class="price"><{$GOODSLIST[GOODSLOOP].price}>E豆</p>
+            </div>
+            </a>
+			<{/section}>
+        </div>
+    </div>
+
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,230 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*
+
+
+   (__)　imrgs 
+　 /oo\\________ 
+　 \　/　　　　 \---\ 
+ 　　\/　　　 /　 \　 \ 
+ 　　　\\_|___\\_|/　　* 
+ 　　　 ||　 YY|  
+ 　　　 ||　　|| 　
+
+
+*/
+
+
+
+*{ margin:0; padding:0; font-family: 'Microsoft Yahei';}
+*{-webkit-tap-highlight-color:rgba(255,0,0,0);}
+a{ text-decoration:none;}
+ul, li{ list-style:none;}
+
+/*字体颜色*/
+.cofff{ color: #fff; }
+.co5cc17f{ color:#5cc17f;}
+.co3e3a39{ color: #3e3a39;}
+.co666{ color: #666;}
+.coff0000{ color: #ff0000;}
+
+/*字体大小*/
+.fontsize18{ font-size: 0.45rem; }
+.fontsize20{ font-size: 0.5rem; }
+.fontsize22{ font-size: 0.55rem; }
+.fontsize24{ font-size: 0.6rem; }
+.fontsize28{ font-size: 0.7rem; }
+.fontsize30{ font-size: 0.75rem; }
+.fontsize36{ font-size: 0.9rem; }
+
+/*间距*/
+.padding16{ padding: 0.4rem 0; }
+.padding12{ padding: 0.3rem 0; }
+.padding-t6{ padding-top:0.1rem; }
+.padding-t8{ padding-top:0.2rem; }
+/*浮动*/
+.float-left{ float: left; }
+.float-right{ float: right; }
+
+
+
+
+
+
+
+
+
+.restmain{ width: 16rem; margin: 0 auto; overflow: hidden;}
+
+
+.restmain-top{ height: 2rem; background: #5cc17f; width:16rem; position: relative;overflow: hidden;}
+.restback{ position: absolute; display: block;  left: 0;}
+.restback img{ height: 2rem; }
+
+.restdown{ position: absolute; display: block;  left: 20px; font-size: 0.6rem; color: #000; line-height: 2rem; padding-right:0.2rem;}
+.restdown span{ float: left; }
+.restdown img{ width: 1rem; margin-top:0.5rem; float: left; }
+.regionshaixuan{ position: absolute; display: block;  right: 20px;width: 1rem; margin-top:0.5rem; float: left;}
+.restcenter{ width: 6rem; margin: 0.38rem auto 0; height: 1.2rem; line-height: 1.2rem; border: 1px solid #fff;overflow: hidden; border-radius:7px; text-align: center;}
+.restcenter a{ width: 3rem; float:left;  font-size: 0.6rem; text-align: center;}
+.fontkuneng{ background:#fff; color:#5cc17f;}
+
+.restlie{ width: 15rem; padding: 0.25rem 0.5rem; overflow: hidden;  border-bottom: 1px solid #ddd;}
+.restlie .mvmap{ width:2.9rem; height:4.25rem; float: left; margin-right: 0.3rem;}
+
+.mtext{ width: 9rem; float: left; }
+.mtext p{ display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.restscore{ width:2.8rem; float: right; text-align:right; }
+.playrest{ width: 2.5rem;border-radius:3px; background: #ff5836; height: 1rem; text-align: center; color: #fff; line-height: 1rem;  font-size: 0.6rem; float: right; margin-top: 0.45rem;}
+.yushou{ width: 2.5rem;border-radius:3px; background: #5cc17f; height: 1rem; text-align: center; color: #fff; line-height: 1rem;  font-size: 0.6rem; float: right; margin-top: 0.45rem;}
+
+.restlinks{margin: 0.5rem 0.5rem 0;  overflow: hidden; display: block; border-bottom: 1px solid #b5b5b5; padding-bottom:0.5rem; }
+
+.restlinks-text{ width:12rem; float: left; }
+.restlinks-text span{ width:12rem;display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.resttel{ height:0.8rem; width: 0.8rem; margin:0.1rem 0 0 0.2rem; }
+.resttel1{ height:0.6rem; width: 0.6rem; margin:0.1rem 0 0 0.2rem; }
+
+.restlinks-add{ float: right; width: 2.8rem; }
+.restlinks-add span{ display: block; overflow: hidden; }
+.testtime{ width: 15rem; padding: 0 0.5rem;border-bottom: 1px solid #b5b5b5; height: 1.6rem; overflow: hidden;}
+.testtime a{ width: 5rem; float: left; text-align: center; height: 1.5rem; padding-top: 0.35rem;}
+.testtime span.fontsize24{ width: 5rem; float: left; text-align: center; height: 1.5rem; padding-top: 0.35rem;}
+.testtimebg{ background: #acd598; border-radius: 3px;color: #fff; display: block; height: 0.8rem; line-height: 0.8rem; width: 3.7rem; margin: 0 auto;}
+.restpass{ overflow: hidden; clear: both; height: 1.1rem; line-height: 1.1rem; padding: 0 0.5rem; background: #edf8ed;}
+.restpass img{ width: 0.5rem; float: left; margin-top: 0.3rem;}
+.restpass span{ float: left;  margin-left: 0.3rem;}
+
+.restpassa{ overflow: hidden; clear: both; height: 0.5rem; padding: 0 0.5rem; background: #edf8ed;}
+
+.restmvhuad{ height: 7rem; width: 16rem; overflow: hidden; background: #707070; }
+
+.restmvhuad ul{ padding-left:0.25rem; padding-top:0.3rem;  }
+.restmvhuad li{ margin: 0 0.25rem; height: 5.25rem; width: 4rem; }
+
+.restmvhuad li img{ width: 100%; height: 100%; }
+
+.mvnamerest{text-align: center; width: 100%; height: 1rem; line-height: 1rem; font-size: 0.5rem; color: #fff; background: #acd598;}
+
+.timegourest{ display: block; padding: 0 0.5rem 0.5rem;border-bottom: 1px solid #b5b5b5;  overflow: hidden;}
+.liester{ float: left; width: 3rem; text-align: center;height: 1.8rem; padding-top:0.5rem; position: relative}
+.liester span{display:block;white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.restbutton{ width: 2.5rem; height: 1rem; background: #ff5836; border: 0; display: block; border-radius: 3px; color: #fff; float: right; margin-top:0.9rem;  }
+
+
+
+
+.index-bottom{ background:#f2f2f2; height:2rem; width:16rem; border-top:1px solid #d5d5d5; position:fixed; margin:auto;left:0; right:0;  bottom:0;z-index:999;}
+.index-bottom a{ width:25%; float:left; height:2rem;}
+.index-bottom a img{ height:1.125rem; width:1.125rem; margin:0 auto; display:block; margin-top:0.15rem;}
+.index-bottom a span{ font-size:0.45rem; text-align:center; display:block;}
+.wzh-km {
+    background: url(../images/wz.png) no-repeat;
+    background-size: 0.8rem 0.9rem;
+    padding-left: 1.1rem;
+    background-position: 0.3rem 0.1rem;
+    float: right;
+}
+
+.tejia{
+    height: 0.625rem;
+    line-height: 0.625rem;
+    padding: 0 0.3rem;
+    overflow: hidden;
+    color: #fff;
+    margin-right: 0.25rem;
+    border-radius: 3px;
+    background: #ff0000 none repeat scroll 0 0;
+    font-size: 0.45rem;
+}
+.tejia2{
+    height: 0.625rem;
+    line-height: 0.625rem;
+    padding: 0 0.3rem;
+    overflow: hidden;
+    color: #fff;
+    margin-right: -0.75rem;
+    border-radius: 3px;
+    background: #ff0000 none repeat scroll 0 0;
+    font-size: 0.45rem;
+}
+.tehui{
+    display: block;
+    width: 1.2rem;
+    height: 0.625rem;
+    line-height: 0.625rem;
+    padding: 0 0.3rem;
+    overflow: hidden;
+    color: #fff;
+    margin-right: 0.25rem;
+    border-radius: 3px;
+    background: #ff0000 none repeat scroll 0 0;
+    font-size: 0.45rem;
+    position: absolute;
+}
+
+.place{
+    height: 38%;
+    width: 16rem;
+    position: absolute;
+    top: -100%;
+    font-family: "黑体-简" , "微软雅黑" ,Arial, Helvetica, sans-serif;
+    color: #515652;
+    font-size: 0.5rem;
+    z-index: 999;
+}
+.place_u ul{
+    display: block;
+    width: 100%;
+}
+.place_u ul li{
+    line-height: 400%;
+    background: #fefefe;
+    padding-left: 0.8rem;
+}
+.place_l ul{
+    display: block;
+    margin: 0 1rem;
+    float: left;
+    width: 80%;
+}
+.place_l ul li{
+    line-height: 400%;
+    padding-left: 0;
+    border-bottom: dashed 0.5px #a7aaa8;
+    position: relative;
+}
+.place_l ul li img{
+    position: absolute;
+    right:0;
+    top: 10%;
+}
+.yixuanregion{
+    display: none;
+    position:fixed;
+    background-color: #fff;
+    width:16rem;
+    height: 6%;
+    margin-top: 2.5rem;
+    z-index: 666;
+}
+.yixuanregion p{
+    position: relative;
+    top: 30%;
+    left: 4.5%;
+    color: #000;
+}
+.yixuanregion span{
+    float: right;
+    color:#5bbdea;
+    position: relative;
+    right: 8%;
+}
+.yixuanregion span,.yixuanregion p{
+    font-size: 0.5rem;
+    font-family: 楷体;
+    font-weight: 100;
+}

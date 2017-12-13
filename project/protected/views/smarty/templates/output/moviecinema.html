@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>E票网</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/output/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/output/main.css">
+    <script type="text/javascript" src="js/output/jquery.min.js"></script>
+    <script type="text/javascript" src="js/output/swiper-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/output/layout.js"></script>
+    <script type="text/javascript" src="js/output/main.js"></script>
+    <script type="text/javascript" src="js/output/cinemacljs.js"></script>
+    <script type="text/javascript" src="js/output/scheduling.js"></script>
+    <script language="javascript">
+
+        var request = GetRequest();
+        var today = new Date();
+        var tomorrow = new Date((today/1000+86400)*1000);
+        var third = new Date((today/1000+86400*2)*1000);
+        var fourth = new Date((today/1000+86400*3)*1000);
+        var fifth = new Date((today/1000+86400*4)*1000);
+        var sixth = new Date((today/1000+86400*5)*1000);
+        var seventh = new Date((today/1000+86400*6)*1000);
+        var ardate = new Array();
+        var arKey  = new Array();
+        var date  = "";
+        var movieId = request.movieId;
+        var curdate = 0;
+        var cityId = localStorage.getItem("cityId");
+        var regionArr=new Array();
+        var regionName="";
+        var movieCinema=[];
+        var datelist=[];
+        if (cityId == null || cityId=='null' || cityId=='' || cityId==undefined || cityId=='undefined' ||cityId=='false'||cityId==false||cityId==0)
+        {
+            cityId=1;
+        }
+        var lat = localStorage.getItem("latitudeP");
+        var lon = localStorage.getItem("longitudeP");
+
+        if (lat == "" || lat == undefined || lat == null)lat = 39.914428;
+        if (lon == "" || lon == undefined || lon == null)lon = 116.582974;
+        getMovieCinema(movieId,cityId);
+
+        function getMovieCinema(movieId,cityId)
+        {
+            $.ajax({
+                type:'get',
+                url:'index.php?r=output/Ajax/GetMovieCinemaList',
+                data: {movieId:movieId,cityId:cityId,latitude:lat,longitude:lon},
+                dataType:'json',
+                success:function(msg){
+                    if (msg.ok)
+                    {
+                        datelist=msg.date;
+                        showdate(msg.date);
+                        //影院筛选-如果选择城区就根据城区筛选影院
+                        movieCinema = msg.data;
+                        cinemaSelect(msg.data);
+                        showCityInfo(msg.cityInfo);
+                    }
+                },
+                error:function(msg){
+
+                    return false;
+                }
+            });
+
+            return false;
+        }
+
+        function showCityInfo(arCity)
+        {
+            localStorage.setItem("cityId",arCity['iCityID']);
+            localStorage.setItem("cityName",arCity['sCityName']);
+            var str='<a href="/cinema/city.php?goback=/cinema/moviecinema.php?movieId='+movieId+'" class="index-logo-right" style="-webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none;text-decoration:none">'
+                    +'<span id="names">'+arCity['sCityName']+'</span>'
+                    +'<img src="/public/front-2.0/images/todown.png" alt="" class="todown">'
+                    +'</a>';
+            $('.position').html(str);
+        }
+
+        //时间选项卡
+        function showdate(datetime)
+        {
+            for (var key in datetime)
+            {
+                ardate.push(getdate(key));
+                arKey.push(key);
+            }
+            date=ardate[0];
+        }
+
+        //影院筛选-如果选择城区就根据城区筛选影院
+        function cinemaSelect(arcinema){
+            var cinemalist=[];
+            var adate=[];
+            regionArr=[];
+            $(arKey).each(function (key, val) {
+                regionArr[val]=new Array();
+                $(arcinema).each(function(id, item) {
+                    $(item['date']).each(function (idx, datem) {
+                        if(datem == val){
+                            regionArr[val].push(item['sRegion']);
+                        }
+                        if(getdate(val)==date){
+                            if(regionName == item["sRegion"]){
+                                cinemalist.push(item);
+                            }
+                        }
+                    });
+                });
+            });
+            if(regionName==""){
+                cinemalist = arcinema;
+            }
+            formatConversion(cinemalist);
+        }
+
+        //影院格式重新组合
+        function formatConversion(arCinema)
+        {
+            var cinemalist = new Array()
+            $(arCinema).each(function(idx, item) {
+                var  cinema = {};
+                var sAddress = item["sAddress"];
+                if (sAddress.length >30)
+                {
+                    sAddress = item["sAddress"].substr(0,30)+"...";
+                }
+                cinema['addresss'] = sAddress;
+                cinema['distance'] = item['dist'];
+                cinema['sCinemaName'] = item["sCinemaName"];
+                cinema['minPrice'] = item["iMinPrice"];
+                cinema['iCinemaID'] = item["iCinemaID"];
+                cinema['sRegion'] = item["sRegion"];
+                cinema['date']=  item["date"];
+                cinema['bIsCarPark'] = item["bIsCarPark"];
+                cinema['bIs4D'] = item["bIs4D"];
+                cinema['bIs4K'] = item["bIs4K"];
+                cinema['bIsDUBI'] = item["bIsDUBI"];
+                cinema['bIsIMAX'] = item["bIsIMAX"];
+                cinema['bIsJUMU'] = item["bIsJUMU"];
+                cinemalist.push(cinema);
+            });
+            showCinema(cinemalist);
+        }
+
+        function showCinema(cinemalist) {
+            var htmlcontent = '';
+            $(arKey).each(function (key, val) {
+                if ((date == "" && key == 0)||getdate(val) == date) {
+                    htmlcontent += '<div class="cinema-table-info active">';
+                }else{
+                    htmlcontent += '<div class="cinema-table-info">';
+                }
+                for (var i = 0; i < cinemalist.length; i++) {
+                    var item = cinemalist[i];
+                    $(item['date']).each(function (idx, datem) {
+                        if (val == datem) {
+                            var mPrice = item['minPrice'];
+                            var specialPrice = '<a class="f10 d-block fcff5836">' + mPrice + '元起</a>';
+                            if (item['minPrice'] < 34) {
+                                specialPrice = '<a class="f10 fcff5836">' + mPrice + '元起</a> <a class="dlra bgf00 fz18">特价</a></span>';
+                            }
+                            var specialPrice = mPrice + '元<small>起</small>';
+                            if (item['minPrice'] < 34) {
+                                specialPrice = mPrice + '元<small>起</small>特价';
+                            }
+
+                            var str = "";
+                            if(item['bIs4D'] == 1){
+                                str+='<span class="d4">4D</span>';
+                            }
+                            if(item['bIsDUBI'] == 1){
+                                str+='<span class="dubi">杜比</span>';
+                            }
+                            if(item['bIsIMAX'] == 1){
+
+                                str+='<span class="imax">IMAX</span>';
+                            }
+                            if(item['bIsJUMU'] == 1){
+                                str+='<span class="jumu">巨幕</span>';
+                            }
+                            if(item['bIsCarPark'] == 1){
+                                str+='<span class="p">停车场</span>';
+                            }
+                            if(item['bIs4K'] == 1){
+                                str+='<span class="vip">4K</span>';
+                            }
+                            htmlcontent += '<div class="cinema-table-info-cinema" onclick="showarrange(' + item['iCinemaID'] + ',' + movieId + ')">'
+                                    + '<h3>' + item["sCinemaName"] + '<span>' + specialPrice + '</span></h3>'
+                                    + '<p>' + item["addresss"] + '<small>' + item["distance"] + 'km</small></p>'
+                                    + '<p style="margin-top: 0.1706rem;">'+str+'</p>'
+                                    + '</div>'
+                        }
+                    });
+                }
+                htmlcontent += '</div>';
+            });
+            if (htmlcontent == '')
+            {
+                htmlcontent = '暂无';
+            }
+            $('.cinema-table-date').html(htmlcontent);
+            showtag();
+            getRegionList(cityId);
+        }
+        //显示时间
+        function showtag()
+        {
+            var content = "";
+            $(ardate).each(function (ids,adate) {
+                var active = "";
+                if ((date == "" && ids == 0)||adate == date) {
+                    active = 'active';
+                }
+                content+='<div class="swiper-slide">'
+                        +'<div class="cinema-table-daytable-item '+active+'">'
+                        +'<p>'+adate+'</p>'
+                        +'</div>'
+                        +'</div>';
+            });
+            $('.swiper-wrapper').html(content);
+            //时间轮播
+            var swiperDate = new Swiper('.cinema-table-daytable .swiper-container', {
+                pagination: '.swiper-pagination',
+                slidesPerView: 3.5,
+                paginationClickable: true,
+            });
+            //时间点击事件
+            dateOnclick();
+        }
+        //时间格式转换
+        function getdate(dtime) {
+            if (dateisequal(dtime, today)) {
+                return '今天' + (today.getMonth() + 1) + "月" + today.getDate() + "日";
+            }
+
+            if (dateisequal(dtime, tomorrow)) {
+                return '明天' + (tomorrow.getMonth() + 1) + "月" + tomorrow.getDate() + "日";
+            }
+
+            if (dateisequal(dtime, third)) {
+                return '后天' + (third.getMonth() + 1) + "月" + third.getDate() + "日";
+            }
+
+            var weekDay = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+            if(dateisequal(dtime, fourth)){
+                return weekDay[fourth.getDay()] + (fourth.getMonth() + 1) + "月" + fourth.getDate() + "日";
+            }
+            if(dateisequal(dtime, fifth)){
+                return weekDay[fifth.getDay()] + (fifth.getMonth() + 1) + "月" + fifth.getDate() + "日";
+            }
+            if(dateisequal(dtime, sixth)){
+                return weekDay[sixth.getDay()] + (sixth.getMonth() + 1) + "月" + sixth.getDate() + "日";
+            }
+            if(dateisequal(dtime, seventh)){
+                return weekDay[seventh.getDay()] + (seventh.getMonth() + 1) + "月" + seventh.getDate() + "日";
+            }
+            return '';
+        }
+
+        function dateisequal(date1,date2)
+        {
+            var d1 = new Date(date1);
+            var d2 = new Date(date2);
+            return (d1.getFullYear() == d2.getFullYear()
+            && d1.getMonth() == d2.getMonth()
+            && d1.getDate() == d2.getDate());
+        }
+        function getRegionList(cityId){
+            var getData = {'iCityID':cityId};
+            $.ajax({
+                type: 'post', // 提交方式 get/post
+                url: "index.php?r=output/Ajax/GetRegionInfo", // 需要提交的 url
+                data: getData,
+                success: function (data) {
+                    var json_str = JSON.parse(data);
+                    if(json_str.ok){
+                        showRegion(json_str.data);
+                    }
+                }
+            });
+        }
+
+        function showRegion(arRegion){
+            var regionCount=0;
+            for(var key in regionArr){
+                if(getdate(key) == date){
+                    regionCount = regionArr[key].length;
+                }
+            }
+            var str='<div class="ticket-table-position-content">'
+                    +'<div class="position-content-item-all" style="width:89%;margin-left: 11.5%">'
+                    +'<p style="width: 85%;-webkit-tap-highlight-color:rgba(255,255,255,0);" onclick="regionSelect(this)">全部 ('+regionCount+'家)</p>'
+                    +'<div class="Xclose" style="-webkit-tap-highlight-color:rgba(255,255,255,0);"><img src="/public/front-2.0/images/X.png" alt=""></div>'
+                    +'</div>';
+            $(arRegion).each(function (ids, item) {
+                var regionNum = 0;
+                for(var key in regionArr){
+                    if(getdate(key) == date){
+                        for(var i=0;i<regionArr[key].length;i++){
+                            if(item['sRegionName'] == regionArr[key][i]){
+                                regionNum++;
+                            }
+                        }
+                    }
+                }
+                if(regionNum!=0){
+                    str += '<div class="position-content-item-item" style="-webkit-tap-highlight-color:rgba(255,255,255,0);" onclick="regionSelect(this)">'
+                            +'<p>'+item['sRegionName']+' ('+regionNum+'家)</p>'
+                            +'</div>';
+                }
+            });
+            str +='<div style="height: 0.5rem;width:100%;float: left;">'
+                    +'</div>'
+                    +'</div>';
+            $('.ticket-table-position').html(str);
+            regionOnclick();
+        }
+
+        function regionOnclick(){
+            $('.city').click(function () {
+                $('.ticket-table-position').first().addClass('active');
+            })
+            $('.Xclose').click(function () {
+                $('.ticket-table-position').first().removeClass('active');
+            })
+            $('.ticket-table-position').click(function () {
+                $('.ticket-table-position').first().removeClass('active');
+            })
+        }
+
+        function regionSelect(that){
+            $('.ticket-table-position').first().removeClass('active');
+            regionName=$(that).text().split(' ')[0];
+            if(regionName=='全部'){
+                regionName="";
+            }
+            cinemaSelect(movieCinema);
+        }
+
+        function searchjump(){
+            window.location.href = 'index.php?r=output/Site/SearchCinema&iMovieID='+movieId;
+        }
+        function showarrange(cinemaId,movieId)
+        {
+            window.location.href = 'index.php?r=output/Site/ArrangeSelect&cinemaId='+cinemaId+'&movieId='+movieId+'&showDate='+arKey[curdate];
+        }
+    </script>
+</head>
+<body>
+<div class="cinema-head">
+    <div class="search" onclick="searchjump()">
+        <img src="/public/front-2.0/images/search.png" alt="">
+        <input type="text" placeholder="搜索影院">
+    </div>
+    <div class="position">
+
+    </div>
+    <img src="/public/front-2.0/images/city.png" alt="" class="city">
+    <div class="cinema-table-daytable">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div style="height: 0.6954rem;"></div>
+<div class="cinema-table">
+    <div class="cinema-table-date">
+
+    </div>
+</div>
+<div class="ticket-table-position" style="-webkit-tap-highlight-color:rgba(255,255,255,0);">
+
+</div>
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</body>
+</html>

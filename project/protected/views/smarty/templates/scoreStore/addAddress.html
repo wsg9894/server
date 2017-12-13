@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>新建地址</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/main.css">
+    <script type="text/javascript" src="js/scoreStore/layout.js"></script>
+	<script src="../js/lib/jquery-1.8.2.min.js" type="text/javascript"></script>
+</head>
+<body class="address">
+    <div class="new active">
+		
+		<form action="/project/index.php?r=scoreStore/Site/AddAddress&gid=<{$GID}>" method="post" name="addrForm" onSubmit="return checkParam();">
+        <div class="input"><p>收货人：</p><input type="text" name="receiver_name" id="receiver_name" maxlength="16"></div>
+        <div class="input"><p>手机号：</p><input type="text" name="receiver_phone" id="receiver_phone" maxlength="11"></div>
+        <div id="sAddress" class="input"><p>所在地区：</p><span style="color:#a5a5a5;height:0.4rem;line-height:0.4rem"></span></div>
+        <div class="input" style="height: 0.5rem;"><p>详细地址：</p><textarea name="address" id="address" cols="40" rows="3"></textarea></div>
+        <div class="sDefault"><input type="checkbox" name="is_def" id="is_def">设置为默认地址</div>
+        <div class="commit"><input type="submit" value="保存地址"></div>
+
+		<input type="hidden" class="proID" name="proID" id="proID" value="">
+		<input type="hidden" class="cityID" name="cityID" id="cityID" value="">
+		<input type="hidden" class="areaID" name="areaID" id="areaID" value="">
+		<input type="hidden" class="areaInfo" name="areaInfo" id="areaInfo" value="">
+		<input type="hidden" class="subFlag" name="subFlag" id="subFlag" value="1">
+		</form>
+
+    </div>
+    <div class="map">
+        <div class="title">
+            <p class="back">返回</p>
+            <img src="images/scoreStore/address_1.png">
+        </div>
+        <div class="cityList">
+            <div class="province active">
+			<{section name=PROVINCELOOP loop=$PROVINCELIST}>
+                <div class="Item">
+                    <p name="<{$PROVINCELIST[PROVINCELOOP].id}>"><{$PROVINCELIST[PROVINCELOOP].name}></p>
+                </div>
+			<{/section}>
+            </div>
+
+            <div class="city">
+			</div>
+
+			<div class="area">
+			</div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    window.onload=function(){
+        var sAddress=document.getElementById('sAddress')
+        var newSection=document.querySelector(".new")
+        var mapSection=document.querySelector(".map")
+        var back=document.querySelector(".back")
+        var pro=document.querySelector(".province")
+        var pros=document.querySelectorAll(".province>div>p")
+        var city=document.querySelector(".city")
+        var citys=document.querySelectorAll(".city>div>p")
+        var area=document.querySelector(".area")
+        var areas=document.querySelectorAll(".area>div>p")
+        var address="";
+		var height=window.innerHeight;
+		var html=document.getElementsByTagName("html")[0];
+		if(html.offsetHeight<height){
+			html.style.height=height+'px'
+		}
+        sAddress.onclick=function(){
+            newSection.className="new"
+            mapSection.className="map active"
+        }
+        back.onclick=function(){
+			address="";
+            newSection.className="new active"
+            mapSection.className="map"
+			pro.className="province active"
+			city.className="city"
+			area.className="area"
+			var citys=document.querySelectorAll(".city>div>p")
+			for(var i=citys.length;i>0;i--){
+				city.removeChild(city.childNodes[i-1])
+			}
+			var areas=document.querySelectorAll(".area>div>p")
+			for(var i=areas.length;i>0;i--){
+				area.removeChild(area.childNodes[i-1])
+			}
+        }
+		var getData ={};
+
+        for(var i=0;i<pros.length;i++){
+            pros[i].i=i
+            pros[i].onclick=function(){
+                pro.className="province"
+                city.className="city active"
+				address=""
+                address=address+""+pros[this.i].innerText+" "
+				document.querySelector(".proID").value=pros[this.i].getAttribute("name")
+				//alert(pros[this.i].getAttribute("name"));
+
+				getData["area"] = "city";
+				getData["pid"] = pros[this.i].getAttribute("name");
+				getAreaInfo(getData,"city",address);
+
+				//console.log(pros[this.i].getAttribute("name"))
+
+            }
+        }
+    }
+
+
+	//城市、地区数据获取
+	function getAreaInfo(getData,way,address){
+		var pro=document.querySelector(".province")
+        var pros=document.querySelectorAll(".province>div>p")
+        var city=document.querySelector(".city")
+        var citys=document.querySelectorAll(".city>div>p")
+        var area=document.querySelector(".area")
+        var areas=document.querySelectorAll(".area>div>p")
+		$.ajax({
+			type : 'post', // 提交方式 get/post
+			url : "index.php?r=scoreStore/Ajax/GetAreaList", // 需要提交的 url
+			data : getData,
+			success : function(data) {
+				//console.log(data);
+				var data = JSON.parse(data);
+				//console.log(data);
+				if(way=="city"){
+					var Citys=document.querySelector(".city")
+					for(var i=0;i<data.length;i++){
+						var newNode=document.createElement("div")
+						newNode.className="Item"
+						var newP=document.createElement("p")
+						newP.setAttribute("name",data[i].iCityID)
+						newP.innerHTML=data[i].sCityName
+						newNode.appendChild(newP)
+						Citys.appendChild(newNode)
+					}
+					var citys=document.querySelectorAll(".city>div>p")
+					for(var i=0;i<citys.length;i++){
+						citys[i].i=i
+						citys[i].onclick=function(){
+							city.className="city"
+							area.className="area active"
+							address=address+citys[this.i].innerText+" "
+							document.querySelector(".cityID").value=citys[this.i].getAttribute("name")
+							getData["area"] = "region";
+							getData["pid"] = citys[this.i].getAttribute("name");
+							getAreaInfo(getData,"region",address);
+						}
+					}
+					//console.log(Citys)
+				}else if(way="region"){
+					var Areas=document.querySelector(".area")
+					for(var i=0;i<data.length;i++){
+						var newNode=document.createElement("div")
+						newNode.className="Item"
+						var newP=document.createElement("p")
+						newP.setAttribute("name",data[i].iRegionID)
+						newP.innerHTML=data[i].sRegionName
+						newNode.appendChild(newP)
+						Areas.appendChild(newNode)
+					}
+					var areas=document.querySelectorAll(".area>div>p")
+					for(var i=0;i<areas.length;i++){
+						areas[i].i=i
+						areas[i].onclick=function(){
+							area.className="area active"
+							address=address+areas[this.i].innerText
+							document.querySelector(".areaID").value=areas[this.i].getAttribute("name")
+							var newSection=document.querySelector(".new")
+							var mapSection=document.querySelector(".map")
+							var aAddress=document.querySelector('#sAddress>span')
+							newSection.className="new active"
+							mapSection.className="map"
+							aAddress.innerHTML=address
+							document.querySelector(".areaInfo").value=address
+							console.log(address)
+							clearCity()
+						}
+					}
+					//console.log(Areas)
+				}
+			}
+		});
+	}
+	function clearCity(){
+		var newSection=document.querySelector(".new")
+		var mapSection=document.querySelector(".map")
+		var pro=document.querySelector(".province")
+        var pros=document.querySelectorAll(".province>div>p")
+        var city=document.querySelector(".city")
+        var citys=document.querySelectorAll(".city>div>p")
+        var area=document.querySelector(".area")
+        var areas=document.querySelectorAll(".area>div>p")
+		pro.className="province active"
+		city.className="city"
+		area.className="area"
+		var citys=document.querySelectorAll(".city>div>p")
+		for(var i=citys.length;i>0;i--){
+			city.removeChild(city.childNodes[i-1])
+		}
+		var areas=document.querySelectorAll(".area>div>p")
+		for(var i=areas.length;i>0;i--){
+			area.removeChild(area.childNodes[i-1])
+		}
+	}
+
+	function checkParam(){
+		var receiverName = $("#receiver_name").val().trim();
+		var receiverPhone = $("#receiver_phone").val().trim();
+		var areaInfo = $("#areaInfo").val().trim();
+		var address = $("#address").val().trim();
+		if(receiverName=="")
+		{
+			alert("请输入收货人...");
+			return false;
+		}
+		if(receiverPhone=="")
+		{
+			alert("请输入手机号...");
+			return false;
+		}
+		var partten = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/; 
+		if(!partten.test(receiverPhone))
+		{
+			alert('手机号格式有误...');
+			return false;
+		}
+		if(areaInfo=="")
+		{
+			alert("请选择所在地区...");
+			return false;
+		}
+		if(address=="")
+		{
+			alert("请输入详细地址...");
+			return false;
+		}
+
+		return true;
+	}
+
+</script>
+</html>

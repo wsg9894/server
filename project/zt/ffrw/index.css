@@ -1,0 +1,114 @@
+*{
+	margin: 0px;
+}
+html{
+	margin: 0px auto;
+}
+body{
+	font-size: 16px;
+	position:relative;
+}
+#canvas{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: -1;
+}
+.title{
+	font-size: 0px;
+	width: 68.4%;
+	margin:0px auto;
+}
+.title img{
+	width: 100%;
+}
+.btn1{
+	font-size: 0px;
+	width: 78.1333%;
+	margin:0px auto;
+	margin-top: 0.5rem;
+}
+.btn1 img{
+	width: 100%;
+}
+.dic{
+	width: 94%;
+	border:2px solid #ff6160;
+	height: 1.0667rem;
+	border-radius: 8px;
+	margin:0.3rem auto;
+	background-color: #fff;
+}
+.btn2{
+	font-size: 0px;
+	width: 78.1333%;
+	margin:0.3rem auto;
+}
+.btn2 img{
+	width: 100%;
+}
+.sGift{
+	width: 94%;
+	border:1px solid #ff6160;
+	height: 0.9813rem;
+	margin: 0px auto;
+	margin-top:0.15rem;
+	background-color: #fff;
+}
+.Edou{
+	text-align: center;
+	font-size: 0.16rem;
+	line-height: 0.3rem;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.button{
+	width: 100%;
+	height: 0.4rem;
+	position: relative;
+}
+.button .eBtn{
+	background-color: #ff6160;
+	color:#fff;
+	font-size: 0.16rem;
+	line-height: 0.4rem;
+	letter-spacing: 5px;
+	border-radius: 100px;
+	width: 60%;
+	display: block;
+	margin-bottom: 0.085333rem;
+	-webkit-appearance:none;
+	border:1px solid #ff6160;
+	position: absolute;
+	left: 20%;
+}
+.button .shadow{
+	width: 59.5%;
+	height: 0.4rem;
+	border-radius: 100px;
+	border:1px solid #ff6160;
+	position: absolute;
+	left: 20%;
+	top: 5px;
+	background-color: #fff;
+	z-index: -1
+}
+.logo{
+	width: 21.3333%;
+	height: 1rem;
+	margin: 0px auto;
+}
+.logo img{
+	width: 100%;
+	margin-top: 60%;
+}
+div img{
+	width: 100%;
+}
+.secBtn{
+	width: 60%;
+	height: 0.4rem;
+	position: absolute;
+	top: 9.15rem;
+	left: 20%;
+}

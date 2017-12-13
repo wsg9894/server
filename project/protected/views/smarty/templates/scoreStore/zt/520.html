@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0,minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>520专题</title>
+    <link href="zt/520/main.css" rel='stylesheet' type='text/css' />
+    <script type="application/javascript" src="zt/520/main.js"></script>
+
+<!--微信分享功能实现-->
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+function wxShare()
+{
+	wx.config({
+
+    debug: false,
+    appId: '<{$SIGNPACKAGE.appId}>',
+    timestamp: '<{$SIGNPACKAGE.timestamp}>',
+    nonceStr: '<{$SIGNPACKAGE.nonceStr}>',
+    signature: '<{$SIGNPACKAGE.signature}>',
+    jsApiList: [
+        // 所有要调用的 API 都要加到这个列表中
+		'onMenuShareAppMessage',
+		'onMenuShareQQ',
+		'onMenuShareTimeline',
+		'onMenuShareQZone',
+		]
+	});
+
+	wx.ready(function(){
+		//分享给朋友
+		wx.onMenuShareAppMessage({
+			title: '520带ta去看场电影！蝶恋花·给最爱的ta', // 分享标题
+			desc: '购任意款ooh Dear银饰，送两张表白日电影卡', // 分享描述
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site/ZT&t=520', // 分享链接
+			imgUrl: '<{$BASEURL}>project/zt/520/jp1.jpg', // 分享图标
+			type: '', // 分享类型,music、video或link，不填默认为link
+			dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+			success: function (e) {
+				// 用户确认分享后执行的回调函数
+			},
+			cancel: function (e) {
+				// 用户取消分享后执行的回调函数
+			}
+		});
+		//分享到qq
+		wx.onMenuShareQQ({
+			title: '520带ta去看场电影！蝶恋花·给最爱的ta', // 分享标题
+			desc: '购任意款ooh Dear银饰，送两张表白日电影卡', // 分享描述
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site/ZT&t=520', // 分享链接
+			imgUrl: '<{$BASEURL}>project/zt/520/jp1.jpg', // 分享图标
+		});
+		
+		//分享到朋友圈
+		wx.onMenuShareTimeline({
+			title: '520带ta去看场电影！蝶恋花·给最爱的ta', // 分享标题
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site/ZT&t=520', // 分享链接
+			imgUrl: '<{$BASEURL}>project/zt/520/jp1.jpg', // 分享图标
+		});
+		
+		//分享到QQ空间
+		wx.onMenuShareQZone({
+			title: '520带ta去看场电影！蝶恋花·给最爱的ta', // 分享标题
+			desc: '购任意款ooh Dear银饰，送两张表白日电影卡', // 分享描述
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site/ZT&t=520', // 分享链接
+			imgUrl: '<{$BASEURL}>project/zt/520/jp1.jpg', // 分享图标
+		});
+
+	});//ready 结束
+}
+
+wxShare();
+</script>
+</head>
+<body>
+<article class="boxx">
+    <div class="indextop">
+        <img src="zt/520/jp1.jpg" class="float-l" width="100%">
+        <a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=61"><img src="zt/520/jp2.jpg" class="float-l" width="100%"></a>
+        <a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=62"><img src="zt/520/jp3.jpg" class="float-l" width="100%"></a>
+        <img src="zt/520/jp4.jpg" class="float-l" width="100%">
+    </div>
+</article>
+</body>
+</html>

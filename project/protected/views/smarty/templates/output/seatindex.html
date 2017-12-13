@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" name="viewport" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width">
+    <title>E票网</title>
+    <link href="css/output/seat/style.css" rel='stylesheet' type='text/css' />
+    <script type="text/javascript" src="js/output/seat/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="js/output/cinemacljs.js"></script>
+    <script type="text/javascript" src="js/output/seat/boxy.js"></script>
+    <!--<script type="text/javascript" src="js/output/seat/common.js"> </script>-->
+    <link href="css/output/seat/boxy.css" rel="stylesheet" type="text/css"/>
+    <link  href="css/output/seat/seat.css" rel="stylesheet" type="text/css"/>
+    <!--<link href="css/output/seat/imrgs-restructure.css" rel='stylesheet' type='text/css' />-->
+    <link rel="stylesheet" href="css/output/main.css">
+    <style type="text/css">
+        #seats{position:relative;overflow:hidden;height:200px;padding:0px;margin:5px 0px;}#w13{position:absolute;top:0px;left:0px;transform:scale(1,1);width:100%;}.seat_map_bg{height:auto;}#seatDivDiv{padding:0px;}#w13 dl{display:block;height:29px;}
+        .seats_opt_bg{ width: 100%; color: #787878; height: 45px; margin-top:10px;line-height: 30px;}
+    </style>
+    <script language="javascript">
+        var request = GetRequest();
+        var today = new Date();
+        var loginStatus = 0;
+        var tomorrow = new Date((today/1000+86400)*1000);
+        var third = new Date((today/1000+86400*2)*1000);
+        var fourth = new Date((today/1000+86400*3)*1000);
+        var fifth = new Date((today/1000+86400*4)*1000);
+        var sixth = new Date((today/1000+86400*5)*1000);
+        var seventh = new Date((today/1000+86400*6)*1000);
+        var iRoommovieID = request.iRoommovieID;
+        var seat_id = "";
+        var cinemaId=0;
+        var movieId=0;
+        var datetime='';
+
+        //上行登录
+        var _mevents = [];
+        function setWebitEvent(evtName, evtCode) {
+            if (evtName == "") {
+                return;
+            }
+            _mevents.push(JSON.stringify({
+                code : evtCode,
+                name : evtName
+            }));
+        };
+
+        function getWebkitEventCode() {
+            return _mevents.length > 0 ? _mevents.shift() : "0";
+        };
+
+        function dateisequal(date1,date2)
+        {
+            var ardate = date1.split('-');
+            var d2 = new Date(date2);
+            return (ardate[0] == d2.getFullYear()
+            && ardate[1] == d2.getMonth()+1
+            && ardate[2] == d2.getDate());
+        }
+
+        function getRoomInfo(iRoommovieID)
+        {
+            $.ajax({
+                type:'get',
+                url:'index.php?r=output/Ajax/GetRoomInfo',
+                data: {roommovieid:iRoommovieID},
+                dataType:'json',
+                success:function(msg){
+                    if (msg.ok)
+                    {
+                        showArrangeInfo(msg.data.seat);
+                    }
+                },
+                error:function(msg){
+                    console.log(msg);
+                    return false;
+                }
+            });
+        }
+
+        function showArrangeInfo(seatinfo)
+        {
+            var beginday = '';
+            var weekday = '';
+            var artime = seatinfo["dBeginTime"].split(':');
+            var hourtime = artime[0]+ ":"+artime[1];
+            var ardate = seatinfo["dBeginTime"].split(' ');
+            if (dateisequal(ardate[0], today)) {
+                beginday =  '今天';
+                weekday = getChineseWeek(today.getDay());
+            }
+
+            if (dateisequal(ardate[0], tomorrow)) {
+                beginday =  '明天';
+                weekday = getChineseWeek(tomorrow.getDay());
+            }
+
+            if (dateisequal(ardate[0], third)) {
+                beginday =  '后天';
+                weekday = getChineseWeek(third.getDay());
+            }
+
+            if (dateisequal(ardate[0], fourth)) {
+                weekday = getChineseWeek(fourth.getDay());
+            }
+
+            if (dateisequal(ardate[0], fifth)) {
+                weekday = getChineseWeek(fifth.getDay());
+            }
+
+            if (dateisequal(ardate[0], sixth)) {
+                weekday = getChineseWeek(sixth.getDay());
+            }
+
+            if (dateisequal(ardate[0], seventh)) {
+                weekday = getChineseWeek(seventh.getDay());
+            }
+            movieId = seatinfo['iMovieID'];
+            cinemaId = seatinfo['iEpiaoCinemaID'];
+            datetime = ardate[0];
+            var content = '<h3>'+seatinfo['sThMovieName']+'</h3>'
+                    + '<p class="p1">'+seatinfo['sThCinemaName']+'</p>'
+                    +'<p class="p2">'+hourtime +' '+weekday +' '+seatinfo['sLanguage']+'/'+seatinfo['sDimensional']+'</p>';
+            document.getElementById('arrangeinfo').innerHTML =content;
+            document.getElementById('roomname').innerHTML =seatinfo["sRoomName"];
+        }
+
+        function getChineseWeek(beginday) {
+            var weekarray=Array("周日","周一","周二","周三","周四","周五","周六");
+            return weekarray[beginday];
+        }
+        //下一步
+        function chooseSeat() {
+            getLoginStatus();
+
+            if($('#seat_list div').length<=0){
+                Boxy.tip('请至少选择一个座位。',1000);
+                return false;
+            }
+
+            var mobile = $('#mobile').val();
+            var re=/^\d{11}$/;
+            if(!re.test(mobile)) {
+                Boxy.tip('请先登录。',1000);
+                return false;
+            }
+
+            var seat_no = '',seat_info = '';
+            var pay_method=$("input[name=pay_method]").val();
+            $('#seats dd.seat_sel').each(function(i, seat) {
+                seat_no += '@@'+$(seat).attr('seatno');
+                seat_info += ','+$(seat).attr('title');
+            });
+            seat_no = seat_no.substr(2);
+            if(seat_no=='') {
+                return false;
+            }
+            seat_info = seat_info.substr(1);
+            var data = {
+                plan_id: iRoommovieID,
+                seat_no: seat_no,
+                seat_info: seat_info,
+                mobile: mobile,
+                activity_id :0,
+                group_id:$("input[name=group_id]").val(),
+                pay_method:pay_method,
+                fromClient:"epiaowang"
+            };
+            var id = $("#"+seat_id);
+            if($(id).hasClass('seat_yes')){
+                if(hasEmptySeat($("#"+seat_id).attr("mr"),$("#"+seat_id).attr("mc")))
+                {
+                    Boxy.tip('亲，不要留下单个座位',1000);
+                    return false;
+                }
+            }else if($(id).hasClass('seat_sel')) {
+                if(hasEmptySeat($("#"+seat_id).attr("mr"),$("#"+seat_id).attr("mc")))
+                {
+                    Boxy.tip('亲，不要留下单个座位',1000);
+                    return false;
+                }
+            }
+            $.ajax({
+                url: 'index.php?r=output/Ajax/CreateSeatOrder',
+                data: data,
+                dataType:'json',
+                beforeSend: function() { Boxy.loading('正在尝试锁定座位，请稍后...');},
+                success: function(data) {
+                    if(data['status']==0) {
+                        location.href = 'index.php?r=output/Site/SeatPay&outerOrderId='+data['error']+'&mPrice='+data['mPrice'];return;
+                    }else {
+                        if(data['status']==3) {
+                            //上行登录
+                            getLogin();
+                        }else{
+                            Boxy.tip(data['error'],2000);
+                        }
+                    }
+                },
+                complete: function () {
+                    Boxy.closeboxy('正在尝试锁定座位，请稍后...');
+                },
+                error: function(data) {
+                    console.log(data);
+                    Boxy.tip('网络异常,请刷新重试...',2000);
+                }
+            });
+
+        }
+
+        function hasEmptySeat(rowNum,columnNum){ //判断座位是否可以选择，比如选择以后是否留下空座
+            for (var row = 1; row <= rowNum; row++ ) {
+                for (var col = 1; col <= columnNum; col++ ) {
+                    var id = '#s_'+row+'_'+col;
+                    if ($(id).hasClass('seat_sel')) {
+                        var originL = col;
+                        var originR = col;
+                        for (col; col <= columnNum; col++ ) {
+                            var idd = '#s_'+row+'_'+col;
+                            if ($(idd).hasClass('seat_sel')) {
+                                originR = col;
+                            } else break;
+                        }
+                        /*
+                         同一排的座位
+                         1 左或右挨着已选座位或者边界，ok ！
+                         左或右不可能挨着自选
+                         左或右加1如果挨着自选，则中间隔的已选或者没座
+                         2 左右挨着空座，左右隔一个不挨着自选，已选，边界
+                         */
+                        var l1State = getSeatStatus(row,originL-1,rowNum,columnNum);
+                        var l2State = getSeatStatus(row,originL-2,rowNum,columnNum);
+                        var r1State = getSeatStatus(row,originR+1,rowNum,columnNum);
+                        var r2State = getSeatStatus(row,originR+2,rowNum,columnNum);
+                        var SeatViewStateNone = -1;
+                        var SeatViewStateNormal = 0;//正常
+                        var SeatViewStateUnavailable = 1;//售出
+                        var SeatViewStateSelected = 2;//选中
+                        if (l1State == SeatViewStateUnavailable || l1State == SeatViewStateNone
+                                || r1State == SeatViewStateUnavailable || r1State == SeatViewStateNone) {
+                            if (l2State == SeatViewStateSelected
+                                    && l1State != SeatViewStateNone
+                                    && l1State != SeatViewStateUnavailable ) {
+                                return true;
+                            }
+                            if (r2State == SeatViewStateSelected
+                                    && r1State != SeatViewStateNone
+                                    && r1State != SeatViewStateUnavailable ) {
+                                return true;
+                            }
+                        } else {
+                            if (l2State != SeatViewStateNormal || r2State != SeatViewStateNormal) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        function getSeatStatus (row,col,rowNum,columnNum){               //获取座位现在的状态
+            if (col < 1 || row < 1 || col > columnNum || row > rowNum) {
+                return -1;
+            } else {
+                var id = '#s_'+row+'_'+col;
+                if($(id).hasClass("seat_none")){
+                    return -1;
+                }else if($(id).hasClass("seat_yes")){
+                    return 0;
+                }else if($(id).hasClass("seat_no")){
+                    return 1;
+                }else{
+                    return 2;
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript" src="js/output/seat/seat_mobile.js"></script>
+    <script type="text/javascript" src="js/output/layout.js"></script>
+</head>
+
+<body>
+<!--等待中-->
+<div class="waiting">
+    <div style="width: 50px;height: 50px;box-sizing: border-box;border: 3px solid #ccc;border-left-color: #000;margin: 0px auto;margin-top:2rem;border-radius: 100px;animation: run 1s infinite ease-in-out;-webkit-animation: run 1s infinite ease-in-out;"></div>
+</div>
+<input type="hidden" id="mobile">
+<div class="out-head">
+    <div class="out-head-left">
+        <a onclick="window.history.go(-1)"><img src="images/output/reback.png" alt="回退"></a>
+    </div>
+    <div class="out-head-right">
+        <span>请选座</span>
+    </div>
+</div>
+<div style="height:0.3413rem"></div>
+<div class="max640">
+    <div class="movie-xuanzuo p-r">
+        <img src="images/output/seat/WALL.png"  width="100%" class="" />
+
+        <div class="movie-xuanzuo-text p-a" id ='arrangeinfo'>
+
+        </div>
+        <div class="seats_opt_bg">
+            <p id ='roomname'></p>
+            <div class="new-screen"></div>
+        </div>
+        <div class="seat_map_bg" id="seatDiv">
+            <div class="seat_map">
+                <div style="margin:0 auto;overflow-x: auto;padding:0px 0px;" id="seatDivDiv">
+                    <div id="seats" class="ptb_15" style="width: 100%; height: 268.228228228228px;">
+                        <div id="w13" style="width:100%; transform: scale(0.924924924924925, 0.924924924924925); top: -10.8858858858859px; transition-duration: 0ms; -webkit-transition-duration: 0ms;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="seat-confirm">
+    <div class="tip">
+        <div class="seat-demo yes" style="margin-left: 5%;">
+            <div class="seat-up"></div>
+            <div class="seat-down"></div>
+        </div>
+        <div class="seat-demo" style="width: 10%;margin-left:1%">可选</div>
+        <div class="seat-demo sel">
+            <div class="seat-up"></div>
+            <div class="seat-down"></div>
+        </div>
+        <div class="seat-demo" style="width: 10%;margin-left:1%">已选</div>
+        <div class="seat-demo no">
+            <div class="seat-up"></div>
+            <div class="seat-down"></div>
+        </div>
+        <div class="seat-demo" style="width: 10%;margin-left:1%">已售</div>
+    </div>
+    <div id="seat_list"></div>
+    <button class="submit" onclick="chooseSeat()">确认选座</button>
+</div>
+<script>
+    var planId= iRoommovieID;
+    $(function () {
+        getRoomInfo(iRoommovieID);
+        $("#seats").seatShow({
+            planId: planId,
+            url: 'index.php?r=output/Ajax/GetRoomSeatInfo&roommovieid='+iRoommovieID,
+            vipPrice: "72.90",
+            activityPrice: "0",
+            activityMaxCount: "0",
+            seatChooseList: "#seat_list",
+            seatChooseSumMoney: "#seatChooseSumMoney"
+        });
+    });
+    function cancelSelectSeat(obj){
+        var info=$(obj).attr("info");
+        for(var i=0;i<$("#seats dd").length;i++){
+            if($("#seats dd").eq(i).attr("id")==info){
+                $("#seats dd").eq(i).click();
+            }
+        }
+    }
+</script>
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+<div id="test1" style="width: 10px;display: block"></div>
+</body>
+</html>

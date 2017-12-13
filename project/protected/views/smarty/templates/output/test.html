@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>获取信息</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0,minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script type="text/javascript" src="js/output/jquery.min.js"></script>
+    <script>
+        var _mevents = [];
+        function setWebitEvent(evtName, evtCode) {
+            if (evtName == "") {
+                return;
+            }
+            _mevents.push(JSON.stringify({
+                code : evtCode,
+                name : evtName
+            }));
+        };
+
+        function getWebkitEventCode() {
+            return _mevents.length > 0 ? _mevents.shift() : "0";
+        };
+        //获取用户信息
+        getUserInfo = function() {
+            var type = "mobileNo";
+            var callbackFun = "getUserInfoCallback";
+            var jsonParamObj = {
+                type : type,
+                callback : callbackFun,
+                encrypt : "RSA"
+            }
+            var jsonParam = JSON.stringify(jsonParamObj);
+            try {
+                window.SysClientJs.getUserInfo(jsonParam);
+            } catch (e) {
+                setWebitEvent(jsonParam, "C05");
+            }
+        }
+        //获取用户信息回调
+        getUserInfoCallback = function(json) {//data为返回的数据，数据为json格式
+            var json = JSON.parse(json);
+            if(json.STATUS==1){
+                var getData = {'cipher':json.MSG};
+                $.ajax({
+                    type: 'post', // 提交方式 get/post
+                    url: "index.php?r=output/Site/GetUserInfo", // 需要提交的 url
+                    data: getData,
+                    dataType : "json",
+                    success: function (data) {
+                        if(data.resultCode==0){
+                            //获取手机号信息成功
+                            var sPhone = JSON.parse(data.resultData).mobileNo;
+                            $("#test1").html(sPhone);
+                        }else{
+                            alert(data.resultDesc);
+                        }
+                    },
+                    timeout:3000,
+                })
+            }else{
+                alert("获取信息失败");
+            }
+        }
+
+
+        //返回到原生app
+        backToApp = function(){
+            try{
+                window.SysClientJs.back();
+            }catch(e){
+                setWebitEvent("B05","B05");
+            }
+        }
+
+
+        //登录状态判断
+        getLoginStatus = function() {
+            try {
+                window.SysClientJs.getLoginStatus("getLoginStatusCallback");
+            } catch (e) {
+                setWebitEvent("getLoginStatusCallbackFun()", "A06");
+            }
+        }
+        //iPhone客户端获取js回调方法名
+        getLoginStatusCallbackFun = function() {
+            $("#test1").html(123);
+            return "getLoginStatusCallback";
+        }
+        //客户端的登录状态从此回调方法中获取，
+        getLoginStatusCallback = function(isLogin) {
+            //isLogin(1-已登录，0-未登录)
+            isLog = isLogin;
+            $("#test1").html(isLogin);
+        }
+
+
+        //跳转登陆页面
+        getLogin = function() {
+            try {
+                window.SysClientJs.getLogin("getLoginCallbackFunback");
+            } catch (e) {
+                setWebitEvent("getLoginCallbackFun()", "A05");
+            }
+        }
+        //iPhone客户端获取js回调方法名
+        getLoginCallbackFun = function() {
+            return "getLoginCallbackFunback()";
+        }
+        //客户端登录成功后会回调该方法
+        getLoginCallbackFunback = function() {
+            $("#test1").html(isLog);
+        }
+
+        function pay(){
+            location.href = 'index.php?r=output/Test/PayOrder';
+        }
+    </script>
+</head>
+<body>
+<input type="button" value="获取用户信息" onclick="getUserInfo()">
+<input type="button" value="返回" onclick="backToApp()">
+<input type="button" value="登录状态判断" onclick="getLoginStatus()">
+<input type="button" value="登录" onclick="getLogin()">
+<input type="button" value="支付" onclick="pay()">
+
+<div id="test1" style="width: 10px;display: block"></div>
+</body>
+</html>

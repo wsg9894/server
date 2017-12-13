@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>E票网</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/output/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/output/main.css">
+    <script type="text/javascript" src="https://api.map.baidu.com/api?type=quick&ak=M5MlqGyDm1wWjN5ImItAOMuG&v=1.0"></script>
+    <script type="text/javascript" src="js/output/jquery.min.js"></script>
+    <script type="text/javascript" src="js/output/swiper-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/output/layout.js"></script>
+    <script type="text/javascript" src="js/output/main.js"></script>
+    <script type="text/javascript" src="js/output/cinemacljs.js"></script>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script>
+        <{if $ISWXVISITOR}>
+            wx.config({
+                debug: false,
+                appId: '<{$SIGNPACKAGE.appId}>',
+                timestamp: '<{$SIGNPACKAGE.timestamp}>',
+                nonceStr: '<{$SIGNPACKAGE.nonceStr}>',
+                signature: '<{$SIGNPACKAGE.signature}>',
+                jsApiList: [
+                    // 所有要调用的 API 都要加到这个列表中
+                    'getLocation',
+                ]
+            });
+            wx.ready(function () {
+                wx.getLocation({
+                    type: 'wgs84',
+                    success: function (res) {
+                        localStorage.setItem("latitudeP", res.latitude);			// 纬度，浮点数，范围为90 ~ -90
+                        localStorage.setItem("longitudeP", res.longitude);		// 经度，浮点数，范围为180 ~ -180
+                    },
+                    cancel: function (res) {
+                        alert("Weixin visitor，cannel");
+                    }
+                });
+            });
+        <{else}>
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(locationSuccess,getPositionError);
+            }else{
+                alert("浏览器不支持!");
+            }
+        <{/if}>
+        function locationSuccess(position)
+        {
+            alert("H5 visitor，get location ok，latitude："+position.coords.latitude+"/longitude："+position.coords.longitude);
+            localStorage.setItem("latitudeP", position.coords.latitude);
+            localStorage.setItem("longitudeP",position.coords.longitude);
+        }
+        function getPositionError(error)
+        {
+            switch (error.code) {
+                case error.TIMEOUT:
+//                    alert("H5 visitor，请求用户地理位置超时");
+                    break;
+                case error.PERMISSION_DENIED:
+//                    alert("H5 visitor，用户拒绝获取地理位置的请求");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+//                    alert("H5 visitor，位置信息是不可用的");
+                    break;
+                case error.UNKNOWN_ERROR:
+//                    alert("H5 visitor，未知错误");
+                    break;
+            }
+        }
+
+
+        var cityId = localStorage.getItem("cityId");
+        var lat = localStorage.getItem("latitudeP");
+        var lon = localStorage.getItem("longitudeP");
+        if (lat == "" || lat == undefined || lat == null)lat = 39.914428;
+        if (lon == "" || lon == undefined || lon == null)lon = 116.582974;
+        if(cityId==null)cityId=1;
+        var regionArr=[];
+        var regionName="";
+        var cinemaList=[];
+        //获取影片和城市的信息
+        getMovieList(cityId);
+        //获取影院的信息
+        getCinemaList(cityId,lon,lat);
+
+        function showMovie(arMovie){
+            var htmlcontent = '';
+            $(arMovie).each(function(idx, item) {
+                var sActor = item['sActor'] ;
+                if (sActor.length >28)
+                {
+                    sActor = item["sActor"].substr(0,28)+"...";
+                }
+                var sDirector = item['sDirector'];
+                var sMovieName = item['sMovieName'];
+                var iMovieScore = parseFloat(Math.round(item['iMovieScore']*10)/10).toFixed(1);
+                if(GetLength(item['sDirector']) > 24){
+                    sDirector = cutstr(item['sDirector'], 24);
+                }
+                if(GetLength(item['sMovieName']) > 25){
+                    sMovieName = cutstr(item['sMovieName'], 25);
+                }
+                var str3='<button class="buy"><a href="index.php?r=output/Site/MovieCinema&movieId='+item['iMovieID']+'">购票</a></button>';
+                var timestamp=new Date().getTime();
+                var dPlayTime = item['dPlayTime'];
+                dPlayTime = dPlayTime.replace(/-/g,'/');
+                var dPlayTimestamp = new Date(dPlayTime).getTime();
+                if(timestamp<dPlayTimestamp){
+                    str3 = '<button class="prebuy"><a href="index.php?r=output/Site/MovieCinema&movieId='+item['iMovieID']+'" style="color:rgb(73,169,238);">预售</a></button>';
+                }
+                htmlcontent += '<div class="ticket-table-item-movie" onclick="openMovieInfo('+item['iMovieID']+')">';
+                htmlcontent += '<div class="ticket-table-item-movie-left">';
+                htmlcontent += '<img src='+item["sImageUrl"]+' alt="">';
+                htmlcontent += '</div>';
+                htmlcontent += '<div class="ticket-table-item-movie-right">';
+                htmlcontent += '<h3>'+item["sMovieName"]+'<small>'+item["iMovieScore"]+'<span>分</span></small></h3>';
+                htmlcontent += '<p>主演：'+sActor+'</p>';
+                htmlcontent += '<p>片长：'+item['iRunTime']+'分钟</p>';
+                htmlcontent += str3;
+                htmlcontent += '</div>';
+                htmlcontent += '</div>';
+            });
+            if (htmlcontent == '')
+            {
+                htmlcontent = '暂无';
+            }
+            $(".ticket-table-item").each(function (index,item) {
+                if(index==0){
+                    $(this).html(htmlcontent);
+                }
+            });
+        }
+
+        function showCityInfo(arCity){
+            if (typeof(arCity['iCityID']) != 'undefined' && typeof(arCity['sCityName']) != 'undefined'){
+                localStorage.setItem("cityId",arCity['iCityID']);
+                localStorage.setItem("cityName",arCity['sCityName']);
+                if(arCity['sCityName'].length>3){
+                    if(arCity['sCityName'].length==4){
+                        $(".ticket-head .position span").css('font-size','0.12rem');
+                        $("#names").text(arCity['sCityName']);
+                    }else{
+                        $(".ticket-head .position").css('width','22%');
+                        $("#names").text(arCity['sCityName'].substring(0,3)+"...");
+                    }
+                }else {
+                    if(arCity['sCityName'].length==3){
+                        $(".ticket-head .position").css('width','20%');
+                    }
+                    $("#names").text(arCity['sCityName']);
+                }
+            }
+        }
+
+        function getMovieList(cityId){
+            var getData = {'iCityID':cityId};
+            $.ajax({
+                type: 'post', // 提交方式 get/post
+                url: "index.php?r=output/Ajax/GetMovieList", // 需要提交的 url
+                data: getData,
+                success: function (data) {
+                    var data = JSON.parse(data);
+                    console.log(data);
+                    //展示影片
+                    showMovie(data.movieList);
+                    //展示城市信息
+                    showCityInfo(data.cityInfo);
+                }
+            })
+        }
+        function getCinemaList(cityId,lon,lat){
+            var getData = {'iCityID':cityId,'longitude':lon,'latitude':lat};
+            $.ajax({
+                type: 'post', // 提交方式 get/post
+                url: "index.php?r=output/Ajax/GetCinemaList", // 需要提交的 url
+                data: getData,
+                success: function (data) {
+                    var data = JSON.parse(data);
+                    if(data.flag){
+                        //声明为全局变量
+                        arCinemaLists = data.cinemaList;
+                        cinemaSelect(data.cinemaList);
+                    }
+                }
+            })
+        }
+        function cinemaSelect(arcinema){
+            var cinemalist=[];
+            regionArr=[];
+            $(arcinema).each(function(idx, item) {
+                regionArr.push(item['cinemaInfo']['sRegion']);
+                if(regionName == item['cinemaInfo']["sRegion"]){
+                    cinemalist.push(item);
+                }
+            });
+            if(regionName==""){
+                cinemalist = arcinema;
+            }
+            showCinema(cinemalist);
+        }
+        function showCinema(cinemalist){
+            var htmlcontent = '';
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var day = now.getDate();
+            if (month <10){
+                month = '0' + month;
+            }
+            if (day <10){
+                day = '0' + day;
+            }
+            var nowStr = year+"-"+month+"-"+day;
+
+            for (var i=0;i<cinemalist.length;i++)
+            {
+                var item = cinemalist[i]['cinemaInfo'];
+                var mPrice=0;
+                if(typeof (item['minPrice']) == 'undefined'){
+                    continue;
+                }
+                if(parseInt(item['minPrice'].split(".")[1]) == 0)
+                {
+                    mPrice = parseInt(item['minPrice']);
+                }else{
+                    mPrice = parseFloat(item['minPrice']).toFixed(1);
+                }
+                var specialPrice =mPrice+'元<small>起</small>' ;
+                if (item['minPrice']<34)
+                {
+                    specialPrice = mPrice+'元<small>起</small>特价';
+                }
+                var str = "";
+                if(item['bIs4D'] == 1){
+                    str+='<span class="d4">4D</span>';
+                }
+                if(item['bIsDUBI'] == 1){
+                    str+='<span class="dubi">杜比</span>';
+                }
+                if(item['bIsIMAX'] == 1){
+
+                    str+='<span class="imax">IMAX</span>';
+                }
+                if(item['bIsJUMU'] == 1){
+                    str+='<span class="jumu">巨幕</span>';
+                }
+                if(item['bIsCarPark'] == 1){
+                    str+='<span class="p">停车场</span>';
+                }
+                if(item['bIs4K'] == 1){
+                    str+='<span class="vip">4K</span>';
+                }
+                var cinemaLast = '';
+                if(i==cinemalist.length-1){
+                    cinemaLast='class="cinemaLast"';
+                }
+                htmlcontent +='<a '+cinemaLast+' style="color:#000" href="index.php?r=output/Site/ArrangeSelect&cinemaId='+item["iCinemaID"]+'&movieId=0&datetime='+nowStr+'">'
+                        + '<div class="ticket-table-item-cinema">'
+                        + '<h3>'+item["sCinemaName"]+'<span>'+specialPrice+'</span></h3>'
+                        + '<p>'+item["sAddress"]+'<small>'+item["dist"]+'km</small></p>'
+                        + '<p style="margin-top: 0.1706rem;">'+str+'</p>'
+                        + '</div>'
+                        + '</a>';
+            }
+
+            if (htmlcontent == '')
+            {
+                htmlcontent  = '暂无';
+            }
+            $(".ticket-table-item").each(function (index,item) {
+                if(index==1){
+                    $(this).html(htmlcontent);
+                }
+            });
+            getRegionList(cityId);
+        }
+        function getRegionList(cityId){
+            var getData = {'iCityID':cityId};
+            $.ajax({
+                type: 'post', // 提交方式 get/post
+                url: "index.php?r=output/Ajax/GetRegionInfo", // 需要提交的 url
+                data: getData,
+                success: function (data) {
+                    var json_str = JSON.parse(data);
+                    if(json_str.ok){
+                        showRegion(json_str.data);
+                    }
+                }
+            });
+        }
+        function showRegion(arRegion){
+            var str='<div class="ticket-table-position">'
+                    +'<div class="ticket-table-position-content">'
+                    +'<div class="position-content-item-all" style="width:89%;margin-left: 11.5%">'
+                    +'<p style="width: 85%" onclick="regionSelect(this)">全部 ('+regionArr.length+'家)</p>'
+                    +'<div class="Xclose"><img src="/public/front-2.0/images/X.png" alt=""></div>'
+                    +'</div>';
+            $(arRegion).each(function (ids, item) {
+                var regionNum = 0;
+                for(var i=0;i<regionArr.length;i++){
+                    if(item['sRegionName'] == regionArr[i]){
+                        regionNum++;
+                    }
+                }
+                if(regionNum!=0){
+                    str += '<div class="position-content-item-item" onclick="regionSelect(this)">'
+                            +'<p>'+item['sRegionName']+' ('+regionNum+'家)</p>'
+                            +'</div>';
+                }
+            });
+            str +='<div style="height: 0.5rem;width:100%;float: left;">'
+                    +'</div>'
+                    +'</div>'
+                    +'</div>';
+            $('.cinemaLast').after(str);
+            regionOnclick();
+        }
+        function regionOnclick(){
+            $('.city').click(function () {
+                $('.ticket-table-position').first().addClass('active')
+            })
+            $('.Xclose').click(function () {
+                $('.ticket-table-position').first().removeClass('active')
+            })
+            $('.ticket-table-position').click(function () {
+                $('.ticket-table-position').first().removeClass('active');
+            })
+        }
+        function regionSelect(that){
+            regionName=$(that).text().split(' ')[0];
+            if(regionName=='全部'){
+                regionName="";
+            }
+            cinemaSelect(arCinemaLists);
+        }
+        function searchjump(){
+            window.location.href = 'index.php?r=output/Site/SearchCinema';
+        }
+        function openMovieInfo(iMovieID)
+        {
+            window.location.href='index.php?r=output/Site/Movie&movieId='+iMovieID+'&type=0';
+        }
+    </script>
+</head>
+<body>
+<div class="ticket-head">
+    <div class="position">
+        <a href="index.php?r=output/Site/CityList&goback=index.php?r=output/Site/" class="index-logo-right">
+            <span id="names"></span>
+            <img src="images/output/todown.png" alt="" class="todown">
+        </a>
+    </div>
+    <div class="tab-group">
+        <div class="tab-group-item active">
+            <h3>电影</h3>
+        </div>
+        <div class="tab-group-item">
+            <h3>影院</h3>
+        </div>
+    </div>
+    <img src="images/output/search.png" alt="" class="search" onclick="searchjump()">
+    <img src="images/output/city.png" alt="" class="city">
+</div>
+<div class="" style="height: 0.4266rem;"></div>
+<div class="ticket-table">
+    <div class="ticket-table-item active">
+
+    </div>
+    <div class="ticket-table-item">
+
+    </div>
+</div>
+<div class="index-foot">
+</div>
+<script type="text/javascript" src="js/output/bottomline.js"></script>
+<script type="text/javascript" src="js/output/tab.js"></script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>提交订单</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/main.css">
+    <script type="text/javascript" src="js/scoreStore/layout.js"></script>
+	<script src="../js/lib/jquery-1.8.2.min.js" type="text/javascript"></script>
+</head>
+<body class="order">
+
+	<{if !empty($USERADDRESS)}>
+	<a href="/project/index.php?r=scoreStore/Site/UserAddressList&aid=<{$USERADDRESS.aid}>&gid=<{$GOODSINFO.gid}>">
+    <div class="address">
+        <p><{$USERADDRESS.receiver_name}><span><{$USERADDRESS.receiver_phone}></span></p>
+        <p class="address"><{$USERADDRESS.area}> <{$USERADDRESS.address}></p>
+        <img src="images/scoreStore/order_01.png">
+    </div>
+	</a>
+	<{else}>
+	<a href="/project/index.php?r=scoreStore/Site/UserAddressList&uid=<{$UINFO.iUserID}>&gid=<{$GOODSINFO.gid}>">
+    <div class="address">
+        <p class="address" style="margin-top:0.2rem">请填写收货地址</p>
+        <img src="images/scoreStore/order_01.png">
+    </div>
+	</a>
+	<{/if}>
+
+	<form action="/project/index.php?r=scoreStore/Site/GoodsExchange" method="post" name="orderForm" onSubmit="return checkParam();">
+	<div class="detail">
+        <div class="detailItem">
+            <img src="<{$GOODSINFO.list_pic}>">
+        </div>
+        <div class="detailItem">
+            <h3><{$GOODSINFO.name}></h3>
+            <p class="num">数量：<input id="down" type="button" value="-"><span id="value">1</span><input id="up" type="button" value="+"></p>
+            <p class="sPrice">价格：<span><{$GOODSINFO.price}>E豆<{if $GOODSINFO.extra_price!=0}>+<{$GOODSINFO.extra_price}>元<{/if}></span></p>
+			<p class="sTotal">当前可兑总量：<span><{$USERALLOWEXCHANGENUM}></span> 个</p>
+        </div>
+    </div>
+	<div class="wayMoney">
+		<{if $GOODSINFO.send_cost>0}>
+		<p>运费：<span>元</span><span class="pri"><{$GOODSINFO.send_cost}></span></p>
+		<{else}>
+		<p>运费：<span class="pri">免运费</span></p>
+		<{/if}>
+    </div>
+
+	<{if $GOODSINFO.extra_price>0 or $GOODSINFO.send_cost>0}>
+    <h4>支付方式</h4>
+    <div class="payWay">
+        <label><input type="radio" name="payType" id="payType" value="400003">余额支付</label>
+		<{if $ISWXVISITOR}>
+        <label><input type="radio" name="payType" id="payType" value="400001">微信支付</label>
+		<{else}>
+		<label><input type="radio" name="payType" id="payType" value="400002">支付宝支付</label>
+		<{/if}>
+        <div class="hr"></div>
+    </div>
+	<{/if}>
+
+    <div class="price">
+		<{if $GOODSINFO.extra_price>0}>
+		<p>实际支付：<span><{$GOODSINFO.price}>E豆+<{$GOODSINFO.extra_price+$GOODSINFO.send_cost}>元</span></p>
+		<{elseif $GOODSINFO.send_cost>0}>
+		<p>实际支付：<span><{$GOODSINFO.price}>E豆+<{$GOODSINFO.send_cost}>元</span></p>
+		<{else}>
+		<p>实际支付：<span><{$GOODSINFO.price}>E豆</span></p>
+		<{/if}>
+    </div>
+    <div class="commit">
+        <input type="submit" value="立即支付">
+    </div>
+	
+	<input type="hidden" name="gid" id="gid" value="<{$GOODSINFO.gid}>">
+	<input type="hidden" name="aid" id="aid" value="<{if !empty($USERADDRESS)}><{$USERADDRESS.aid}><{/if}>">
+	<input type="hidden" name="payNum" id="payNum" value="1">
+	<input type="hidden" name="subFlag" id="subFlag" value="1">
+	</form>
+<script type="text/javascript">
+    var numFlag=1;
+    var numTop=<{$USERALLOWEXCHANGENUM}>;
+
+window.onload=function(){
+        var btnUp=document.getElementById('up');
+        var btnDown=document.getElementById('down');
+        var value=document.getElementById('value');
+        var wayMoney=document.querySelector('.wayMoney>p>.pri')
+        var sumSpan=document.querySelector('.price>p>span')
+		var height=window.innerHeight;
+		var html=document.getElementsByTagName("html")[0];
+		if(html.offsetHeight<height){
+			html.style.height=height+'px'
+		}
+        if(wayMoney.innerHTML!='免运费'){
+            wayPrice=wayMoney.innerHTML
+        }else{
+            wayPrice=0
+        }
+        //sumSpan.innerHTML=5+'E豆+'+(2+parseFloat(wayPrice))+'元'
+        btnUp.onclick=function(){
+            value.innerHTML=changeNum(1,numTop,wayPrice)
+        }
+        btnDown.onclick=function(){
+            value.innerHTML=changeNum(0,numTop,wayPrice)
+        }
+        changeColor()
+    }
+    function changeNum(dir,numTop,wayPrice){
+        if(dir==1&&numFlag<numTop){
+            numFlag++
+        }else if(dir==0&&numFlag>1){
+            numFlag--
+        }
+
+		var payNum=document.getElementById('payNum');
+		payNum.value = numFlag;
+
+        var span=document.querySelector('.sPrice>span')
+        var sumSpan=document.querySelector('.price>p>span')
+        console.log()
+		
+		<{if $GOODSINFO.extra_price>0}>
+        span.innerHTML=numFlag*<{$GOODSINFO.price}>+'E豆+'+(numFlag*<{$GOODSINFO.extra_price}>).toFixed(1)+'元'
+        sumSpan.innerHTML=numFlag*<{$GOODSINFO.price}>+'E豆+'+(numFlag*<{$GOODSINFO.extra_price}>+<{$GOODSINFO.send_cost}>).toFixed(1)+'元'
+		<{elseif $GOODSINFO.send_cost>0}>
+        span.innerHTML=numFlag*<{$GOODSINFO.price}>+'E豆'
+        sumSpan.innerHTML=numFlag*<{$GOODSINFO.price}>+'E豆+'+<{$GOODSINFO.send_cost}>+'元'
+		<{else}>
+        span.innerHTML=numFlag*<{$GOODSINFO.price}>+'E豆'
+        sumSpan.innerHTML=numFlag*<{$GOODSINFO.price}>+'E豆'
+		<{/if}>
+        changeColor()
+        return numFlag;
+    }
+    function changeColor(){
+        var btnUp=document.getElementById('up');
+        var btnDown=document.getElementById('down');
+        if(numTop==1){
+            btnUp.className=""
+            btnDown.className=""
+        }else if(numFlag>1&&numFlag<numTop){
+            btnUp.className="active"
+            btnDown.className="active"
+        }else if(numFlag==1&&numFlag<numTop){
+            btnUp.className="active"
+            btnDown.className=""
+        }else if(numFlag==numTop&&numFlag>1){
+            btnUp.className=""
+            btnDown.className="active"
+        }
+    }
+
+	function checkParam(){
+		var aid = $("#aid").val().trim();
+		if(aid=="")
+		{
+			alert("请填写收货地址...");
+			return false;
+		}
+		
+		var payType = "";
+		var chkObjs = document.getElementsByName("payType"); 
+		for(var i=0;i<chkObjs.length;i++){ 
+			if(chkObjs[i].checked){ 
+				payType = chkObjs[i].value; 
+				break;
+			}
+		}
+		var payNum = $("#payNum").val().trim();
+		var payAccount = (numFlag*<{$GOODSINFO.extra_price}>+<{$GOODSINFO.send_cost}>).toFixed(1);
+		if(payAccount>0 && payType=="")
+		{
+			alert("请选择支付方式...");
+			return false;
+		}
+		
+		if(payType=="400003" && payAccount><{$UINFO.mAccountMoney}>)
+		{
+			alert("您的余额不足，请充值...");
+			return false;
+		}
+
+		return true;
+	}
+</script>
+
+<div style="display:none">
+<script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>E票网</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/output/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/output/main.css">
+    <script type="text/javascript" src="js/output/jquery.min.js"></script>
+    <script type="text/javascript" src="js/output/swiper-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/output/layout.js"></script>
+    <script type="text/javascript" src="js/output/main.js"></script>
+    <script type="text/javascript" src="js/output/posterclick.js"></script>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script language="javascript">
+        var movieId = <{$movieId}>;
+        var type = <{$type}>;
+        var movieinfo = "";
+        window.localStorage.setItem("movieid",movieId);
+        getMovieInfo(movieId);
+
+        function getMovieInfo(movieId)
+        {
+            $.ajax({
+                type:'get',
+                url:'index.php?r=output/Ajax/GetMovieInfo',
+                data: {movieId:movieId},
+                dataType:'json',
+                success:function(msg){
+                    if(msg.ok){
+                        showMovie(msg.data)
+                    }
+                },
+                error:function(msg){
+                    return false;
+                }
+            });
+
+            return false;
+        }
+
+        function showMovie(arMovie)
+        {
+            var iFavorMoiveName = "";
+            var arr = arMovie['iFavorMoiveID'].split('、');
+        <{foreach from=$arMovieType item=temp key=k}>
+            for(var i = 0; i < arr.length; i++)
+            {
+                if(arr[i] == <{$k}>)
+                {
+                    iFavorMoiveName += "<{$temp}>"+"、";
+                }
+            }
+        <{/foreach}>
+            var htmlcontent = '<img src="'+arMovie['sSmallImageUrl']+'" class="poster"/>'
+                    +'<h3>'+arMovie['sMovieName']+'</h3>'
+                    +'<p class="type">'+iFavorMoiveName.substring(0,iFavorMoiveName.length-1)+'｜'+arMovie['iRunTime']+'分钟<span>'+arMovie['iMovieScore']+'</span></p>'
+                    +'<p class="date">'+arMovie['dPlayTime']+'中国大陆上映</p>'
+                    + '<p class="director">导演：'+arMovie['sDirector']+'</p>'
+                    + '<p class="actor">主演：'+arMovie['sActor']+'</p></dd><dd>'
+
+            $('.detail-main').html(htmlcontent);
+            //微信分享
+            var shareTitle = '《'+arMovie['sMovieName']+'》E票网在线选座';
+            var shareDesc = '导演：'+arMovie['sDirector']+'，主演：'+arMovie['sActor'];
+            var shareImg = 'http://'+location.host+arMovie['sSmallImageUrl'];
+        <{if $ISWXVISITOR}>
+            wx.config({
+                debug: false,
+                appId: '<{$SIGNPACKAGE.appId}>',
+                timestamp: <{$SIGNPACKAGE.timestamp}>,
+                nonceStr: '<{$SIGNPACKAGE.nonceStr}>',
+                signature: '<{$SIGNPACKAGE.signature}>',
+                jsApiList: [
+                    // 所有要调用的 API 都要加到这个列表中
+                    'onMenuShareTimeline',
+                    'onMenuShareAppMessage',
+                    'onMenuShareQQ',
+                    'onMenuShareWeibo',
+                    'onMenuShareQZone',
+                ]
+        });
+        wx.ready(function(){
+            //分享给朋友
+            wx.onMenuShareAppMessage({
+                title: shareTitle, // 分享标题
+                desc: shareDesc, // 分享描述
+                link: '', // 分享链接
+                imgUrl: shareImg, // 分享图标
+                type: '', // 分享类型,music、video或link，不填默认为link
+                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                success: function (e) {},
+                cancel: function (e) {}
+            });
+            //分享到朋友圈
+            wx.onMenuShareTimeline({
+                title: shareTitle, // 分享标题
+                link: '', // 分享链接
+                imgUrl: shareImg, // 分享图标
+                success: function () {},
+                cancel: function () {}
+            });
+            wx.onMenuShareQQ({
+                title: shareTitle, // 分享标题
+                desc: shareDesc, // 分享描述
+                link: '', // 分享链接
+                imgUrl: shareImg, // 分享图标
+                success: function () {},
+                cancel: function () {}
+            });
+            wx.onMenuShareWeibo({
+                title: shareTitle, // 分享标题
+                desc: shareDesc, // 分享描述
+                link: '', // 分享链接
+                imgUrl: shareImg, // 分享图标
+                success: function () {},
+                cancel: function () {}
+            });
+            wx.onMenuShareQZone({
+                title: shareTitle, // 分享标题
+                desc: shareDesc, // 分享描述
+                link: '', // 分享链接
+                imgUrl: shareImg, // 分享图标
+                success: function () {},
+                cancel: function () {}
+            });
+        });
+        <{/if}>
+
+            var htmlcontent = '<h3>剧情简介</h3>'
+                    +'<p>'+arMovie['sMovieInfo']+'</p>'
+                    +'<h3 class="button" style="-webkit-tap-highlight-color:rgba(255,255,255,0);">展开</h3>';
+            $('.detail-content').html(htmlcontent);
+
+            var mPrevueUrl = arMovie['mPrevueUrl'];
+            if(mPrevueUrl == "" || mPrevueUrl == null)
+            {
+                $(".detail-premovie").css("display","none");
+            }else{
+                $("iframe").attr("src","https://v.qq.com/iframe/player.html?vid="+mPrevueUrl+"&tiny=0&auto=0");
+            }
+
+            //剧照
+            var sImage = "";
+            var bImage = "";
+            var picture = arMovie['picture'];
+            $(picture).each(function (index,item) {
+                sImage += '<div class="swiper-slide" style="background:url(' +item.sImageUrl + ');background-size: cover;background-repeat: no-repeat;background-position: center;">'
+                        + '</div>';
+                bImage += '<div class="swiper-slide" style="background:url(' +item.sBigImageUrl + ');background-size: contain;background-repeat: no-repeat;background-position: center;">'
+                        + '</div>';
+            });
+            $('.smallImg').html(sImage);
+            $('.bigImg').html(bImage);
+            shuffling();
+        }
+
+        function shuffling(){
+            var swiper = new Swiper('.detail-poster-group .swiper-container', {
+                pagination: '.swiper-pagination',
+                slidesPerView: 3.5,
+                paginationClickable: true,
+                spaceBetween: 5
+            });
+            posterclick();
+        }
+    </script>
+</head>
+<body>
+<div class="detail-premovie">
+    <iframe id="iframeSon" class="premovie-video" src="" frameborder="0"></iframe>
+</div>
+<div class="detail-main">
+
+</div>
+<div class="detail-content">
+
+</div>
+<div class="detail-poster-group">
+    <h3>剧照</h3>
+    <div class="swiper-container">
+        <div class="swiper-wrapper smallImg">
+
+        </div>
+    </div>
+</div>
+<div class="hide-poster">
+    <div class="swiper-container">
+        <div class="swiper-wrapper bigImg">
+
+        </div>
+    </div>
+</div>
+<a href="index.php?r=output/Site/MovieCinema&movieId=<{$movieId}>" style="text-decoration:none;position: fixed;bottom: 0px;width: 3.2rem;z-index: 5;background-color: #fff;">
+    <button class="detail-buy">立即购票</button>
+</a>
+<div style="width: 100%;height: 0.6rem;"></div>
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>女神3月专宠季之宠爱清单</title>
+	<meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <script type="text/javascript" src="js/scoreStore/layout.js"></script>
+    <style>
+		*{
+			margin: 0px;
+			padding: 0px;
+		}
+		html{
+			margin: 0px auto;
+		}
+		body{
+			background: #f8fbff
+		}
+		#bg{
+			width: 100%;
+		}
+		.box{
+			width: 68.5%;
+			height: 1.1rem;
+			position: absolute;
+			top: 0px;
+			left: 16%;
+		}
+		.box1{
+			top: 3.75rem;
+		}
+		.box2{
+			top: 4.852rem;
+		}
+		.box3{
+			top: 5.954rem;
+		}
+		.box4{
+			top: 7.056rem;
+		}
+		.box5{
+			top: 8.158rem;
+		}
+		.box6{
+			top: 9.26rem;
+		}
+		.button{
+			width: 54%;
+			height: 0.5rem;
+			position: absolute;
+			top: 11.9rem;
+			left: 22%;
+		}
+    </style>
+
+<!--微信分享功能实现-->
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+function wxShare()
+{
+	wx.config({
+
+    debug: false,
+    appId: '<{$SIGNPACKAGE.appId}>',
+    timestamp: '<{$SIGNPACKAGE.timestamp}>',
+    nonceStr: '<{$SIGNPACKAGE.nonceStr}>',
+    signature: '<{$SIGNPACKAGE.signature}>',
+    jsApiList: [
+        // 所有要调用的 API 都要加到这个列表中
+		'onMenuShareAppMessage',
+		'onMenuShareQQ',
+		'onMenuShareTimeline',
+		'onMenuShareQZone',
+		]
+	});
+
+	wx.ready(function(){
+		//分享给朋友
+		wx.onMenuShareAppMessage({
+			title: '女神3月专宠季，只为等你！', // 分享标题
+			desc: '查看属于你的宠爱清单，掌握专属宠爱秘籍！', // 分享描述
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site/ZT&t=38', // 分享链接
+			imgUrl: '<{$BASEURL}>project/images/scoreStore/zt/38_share.jpg', // 分享图标
+			type: '', // 分享类型,music、video或link，不填默认为link
+			dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+			success: function (e) {
+				// 用户确认分享后执行的回调函数
+			},
+			cancel: function (e) {
+				// 用户取消分享后执行的回调函数
+			}
+		});
+		//分享到qq
+		wx.onMenuShareQQ({
+			title: '女神3月专宠季，只为等你！', // 分享标题
+			desc: '查看属于你的宠爱清单，掌握专属宠爱秘籍！', // 分享描述
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site/ZT&t=38', // 分享链接
+			imgUrl: '<{$BASEURL}>project/images/scoreStore/zt/38_share.jpg', // 分享图标
+		});
+		
+		//分享到朋友圈
+		wx.onMenuShareTimeline({
+			title: '女神3月专宠季，只为等你！', // 分享标题
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site/ZT&t=38', // 分享链接
+			imgUrl: '<{$BASEURL}>project/images/scoreStore/zt/38_share.jpg', // 分享图标
+		});
+		
+		//分享到QQ空间
+		wx.onMenuShareQZone({
+			title: '女神3月专宠季，只为等你！', // 分享标题
+			desc: '查看属于你的宠爱清单，掌握专属宠爱秘籍！', // 分享描述
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site/ZT&t=38', // 分享链接
+			imgUrl: '<{$BASEURL}>project/images/scoreStore/zt/38_share.jpg', // 分享图标
+		});
+
+	});//ready 结束
+}
+
+wxShare();
+</script>
+
+</head>
+<body>
+	<img id="bg" src="images/scoreStore/zt/38bg.jpg">
+	<a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=51"><div class="box box1"></div></a>
+	<a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=50"><div class="box box2"></div></a>
+	<a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=49"><div class="box box3"></div></a>
+	<a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=53"><div class="box box4"></div></a>
+	<a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=52"><div class="box box5"></div></a>
+	<a href="/project/index.php?r=scoreStore/Site/GoodsDetail&gid=46"><div class="box box6"></div></a>
+	<a href="/project/index.php?r=scoreStore/Site/Tasks"><div class="button"></div></a>
+
+<div style="display:none">
+<script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228"></script>
+</div>
+
+</body>
+</html>

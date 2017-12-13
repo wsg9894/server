@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><{$GNAME}></title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/movieGame/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/movieGame/main.css">
+    <script type="text/javascript" src="js/movieGame/jquery.min.js"></script>
+    <script type="text/javascript" src="js/movieGame/swiper-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/movieGame/layout.js"></script>
+    <script type="text/javascript" src="js/movieGame/main.js"></script>
+    <style>
+        #text{
+            text-align: left;
+            width: 53%;
+            height: 0.11rem;
+            border: none;
+            resize:none;
+            outline:none;
+            background-color: #fff;
+        }
+        button{
+            outline:none;
+        }
+        .xl-down-h,.xl-top-h{
+            clear: both;
+            display: block;
+            margin: auto;
+            width: 0.2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body style="position: inherit">
+<div class="gamedetail-premovie">
+    <{if $P_VIDEO != ""}>
+    <iframe id="iframeSon" class="premovie-video" src="https://v.qq.com/iframe/player.html?vid=<{$P_VIDEO}>&amp;tiny=0&amp;auto=0" frameborder="0"></iframe>
+    <{else}>
+    <img src="<{$P_IMG}>" alt="">
+    <{/if}>
+</div>
+<div class="cHr"></div>
+<div class="game-package">
+    <div class="game-package-head">
+        <div class="game-package-head-left">
+            <img src="<{$IMG}>" alt="">
+        </div>
+        <div class="game-package-head-right">
+            <div class="game-package-head-right-head">
+                <h3><{$GNAME}></h3>
+                <p class="notice"><{$DESCRIBE}></p>
+                <p class="tip"><{if $CATE !=""}><{$CATE}> | <{/if}><{$NUM_PEOPLE}>人在玩 <{if $GAMESIZE != ""}>| <{$GAMESIZE}><{/if}></p>
+                <{if $NUMPACKAGE >0}>
+                <button>领取礼包</button>
+                <{/if}>
+            </div>
+            <{$SAFETY}>
+            <{foreach from="$PACKLIST" item="PACKAGE"}>
+            <div class="package-game-item">
+                <{if $PACKAGE.getCount > 0}>
+                <a href="/project/index.php?r=partner/Game/Packagedetail&pid=<{$PACKAGE.pid}>&gid=<{$GID}>&from=8">
+                    <h3><{$PACKAGE.name}></h3>
+                    <p><{$PACKAGE.info}></p>
+                    <span><{if $PACKAGE.getCount == 0}>限领一次<{else}>每日领取<{/if}></span>
+                </a>
+                <button class="active" onclick="getAJAX('<{$PACKAGE.pid}>','/project/index.php?r=partner/Game/GetPackage','pid',getPackage)">领取</button>
+                <{else}>
+                <a href="/project/index.php?r=partner/Game/Packagedetail&pid=<{$PACKAGE.pid}>&gid=<{$GID}>&from=8">
+                    <h3><{$PACKAGE.name}></h3>
+                    <p><{$PACKAGE.info}></p>
+                    <span><{if $PACKAGE.getCount == 0}>限领一次<{else}>每日领取<{/if}></span>
+                </a>
+                <button>已领完</button>
+                <{/if}>
+            </div>
+            <{/foreach}>
+        </div>
+    </div>
+</div>
+<div class="cHr"></div>
+<div class="gamedetail-content">
+    <h3>游戏介绍</h3>
+    <div class="gamedetail-detail">
+        <p><{$INFO}></p>
+        <{if $FLAG != 0}>
+        <img class="xl-down-h" src="/viewlibs/default/templates/cinema/images/xl-down-h.png"/>
+        <{/if}>
+        <img class="xl-top-h" src="/viewlibs/default/templates/cinema/images/xl-top-h.png" style="display: none"/>
+    </div>
+    <h3>游戏截图</h3>
+    <div class="gamedetail-poster-group">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <{foreach from="$GAMEIMG" item="SMALLIMG"}>
+                <div class="swiper-slide">
+                    <img src="<{$SMALLIMG.small_img}>" alt="">
+                </div>
+                <{/foreach}>
+            </div>
+        </div>
+    </div>
+    <{if $AUTH_DESC != ""}>
+    <h3>权限说明</h3>
+    <div class="gamedetail-detail-power">
+        <p><{$AUTH_DESC}></p>
+    </div>
+    <div style="width: 100%;height: 1px;border-top:transparent;"></div>
+    <{/if}>
+</div>
+<div class="hide-poster">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <{foreach from="$GAMEIMG" item="BIGIMG"}>
+            <div class="swiper-slide" style="background-image: url(<{$BIGIMG.big_img}>);background-repeat: no-repeat; background-size: contain; background-position: center;">
+            </div>
+            <{/foreach}>
+        </div>
+    </div>
+</div>
+<div class="get-success">
+
+</div>
+<div class="gamedetail-install">
+    <{if $HREF==1}>
+    <button onclick="getAJAX('<{$GID}>','/project/index.php?r=partner/Game/Install','gid',insertGame)"><{$INSTALL}></button>
+    <{/if}>
+</div>
+<div style="width: 100%;height: 0.74rem;"></div>
+<div class="hide-tip" style="position:fixed;z-index: 1000;left: 0px;top: 0px;width: 100%;height: 100%;background-color: rgba(0,0,0,0.6);display: none">
+    <img src="images/movieGame/rightup.png" style="width: 60%;float: right;margin-right: 0.0853rem;margin-top: 0.0853rem;" >
+</div>
+<script>
+    var swiper = new Swiper('.gamedetail-poster-group .swiper-container', {
+        pagination: '.swiper-pagination',
+        slidesPerView: 3.5,
+        paginationClickable: true,
+        spaceBetween: 5
+    });
+
+    $(function(){
+        if( $('.game-package-head-right-head button').length>0){
+            $('.game-package-head-right-head button').eq(0)[0].onclick=function(){
+                if($('.game-package-head-right').eq(0)[0].className.indexOf('active')>=0){
+                    $('.game-package-head-right').removeClass('active')
+                }else{
+                    $('.game-package-head-right').addClass('active')
+                }
+            }
+        }
+
+        var test = "";
+
+        $('.xl-down-h').click(function () {
+            test = $('.gamedetail-detail p').text();
+            $('.gamedetail-detail p').html('<{$INTRODUCE}>');
+            $(".xl-down-h").css("display","none");
+            $(".xl-top-h").css("display","block");
+        });
+
+        $('.xl-top-h').click(function () {
+            $('.gamedetail-detail p').text(test);
+            $(".xl-down-h").css("display","block");
+            $(".xl-top-h").css("display","none");
+        });
+    })
+
+    //ajax请求
+    function getAJAX(id,url,fl,fun){
+        if(fl == "pid"){
+            var jsonData = {pid:id};
+        }else{
+            var jsonData = {gid:id};
+        }
+        $.ajax({
+            url: url,
+            data: jsonData,
+            type: "post",
+            success: function (data) {
+                var json_str = JSON.parse(data);
+                fun(json_str);
+            },error: function (error) {
+
+            }
+        });
+    }
+
+    function copy(flag){
+        if(flag == undefined || flag == "undefined"){
+            var button=document.getElementById("btn");
+            document.getElementById("text").select();
+            document.execCommand("copy",false,null);
+            $('.get-success').removeClass('active');
+        }else{
+            $('.get-success').removeClass('active');
+        }
+    }
+
+    function getPackage(json_str){
+        var str = "";
+        switch (json_str.ERRORPACKAGE){
+            case 0:
+                str +='<div class="get-success-content">'
+                        +'<img class="closeImg" src="images/movieGame/close.png">'
+                        +'<h3>领取成功</h3>'
+                        +'<img src="images/movieGame/gift.png" alt="">'
+                        +'<h4>'+json_str.data["name"]+'</h4>'
+                        +'<p style="text-align: right;">兑换码：<textarea id="text">'+json_str.data["passCode"]+'</textarea></p>'
+                        +'<span>已保存到我的游戏-礼包</span>'
+                        +'<div>'
+                        +'<div class="ok">'
+                        +'<a href="/project/index.php?r=partner/Game/Packagedetail&pid='+json_str.data["pid"]+'&from=8"><p>使用说明</p></a>'
+                        +'</div>'
+                        +'<div class="copy">'
+                        +'<p id="btn" onclick="copy()">长按兑换码复制</p>'
+                        +'</div>'
+                        +'</div>'
+                        +'</div>';
+                break;
+            case 1:
+                str +='<div class="get-success-content">'
+                        +'<img class="closeImg" src="images/movieGame/close.png">'
+                        +'<h3>'+json_str.data+'</h3>'
+                        +'<img src="images/movieGame/gift.png" alt="">'
+                        +'<div>'
+                        +'<div class="copy" style="width:100%;">'
+                        +'<p onclick="copy(1)">确定</p>'
+                        +'</div>'
+                        +'</div>'
+                        +'</div>';
+                break;
+            case 2:
+                str +='<div class="get-success-content">'
+                        +'<img class="closeImg" src="images/movieGame/close.png">'
+                        +'<h3>'+json_str.data+'</h3>'
+                        +'<img src="images/movieGame/gift.png" alt="">'
+                        +'<div>'
+                        +'<div class="copy" style="width:100%;">'
+                        +'<p onclick="copy(1)">确定</p>'
+                        +'</div>'
+                        +'</div>'
+                        +'</div>';
+                break;
+            case 3:
+                str +='<div class="get-success-content">'
+                        +'<img class="closeImg" src="images/movieGame/close.png">'
+                        +'<h3>您今日已经领取该游戏礼包</h3>'
+                        +'<img src="images/movieGame/gift.png" alt="">'
+                        +'<h4>'+json_str.data["name"]+'</h4>'
+                        +'<p style="text-align: right;">兑换码：<textarea id="text">'+json_str.data["passCode"]+'</textarea></p>'
+                        +'<span>已保存到我的游戏-礼包</span>'
+                        +'<div>'
+                        +'<div class="ok">'
+                        +'<a href="/project/index.php?r=partner/Game/Packagedetail&pid='+json_str.data["pid"]+'&from=8"><p>使用说明</p></a>'
+                        +'</div>'
+                        +'<div class="copy">'
+                        +'<p id="btn" onclick="copy()">长按兑换码复制</p>'
+                        +'</div>'
+                        +'</div>'
+                        +'</div>';
+                break;
+            case 4:
+                str +='<div class="get-success-content">'
+                        +'<img class="closeImg" src="images/movieGame/close.png">'
+                        +'<h3>您已领取该游戏的礼包</h3>'
+                        +'<img src="images/movieGame/gift.png" alt="">'
+                        +'<h4>'+json_str.data["name"]+'</h4>'
+                        +'<p style="text-align: right;">兑换码：<textarea readonly id="text">'+json_str.data["passCode"]+'</textarea></p>'
+                        +'<span>已保存到我的游戏-礼包</span>'
+                        +'<div>'
+                        +'<div class="ok">'
+                        +'<a href="/project/index.php?r=partner/Game/Packagedetail&pid='+json_str.data["pid"]+'&from=8"><p>使用说明</p></a>'
+                        +'</div>'
+                        +'<div class="copy">'
+                        +'<p id="btn" onclick="copy()">长按兑换码复制</p>'
+                        +'</div>'
+                        +'</div>'
+                        +'</div>';
+                break;
+            case 5:
+                window.location.href=json_str.data;
+                break;
+        }
+        $('.get-success').html(str);
+        $('.get-success').addClass('active');
+        $('.closeImg').eq(0)[0].onclick=function(){
+            $('.get-success').removeClass('active')
+        }
+    }
+
+    function insertGame(json_str){
+        if(json_str.ERRORGAME == 0){
+            alert("请选择正确的下载/打开列表");
+            location.href = json_str.HREF;
+        }else if(json_str.ERRORGAME == "isWeixin"){
+            $('.hide-tip').css("display","block");
+        }else{
+            location.href = json_str.HREF;
+        }
+    }
+
+    $('.hide-tip').click(function(){
+        $('.hide-tip').css("display","none");
+    });
+</script>
+<script type="text/javascript" src="js/movieGame/posterclick.js"></script>
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</body>
+</html>

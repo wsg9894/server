@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" id="html">
+<head>
+    <meta charset="UTF-8">
+    <title>在线支付</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0,minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="stylesheet" href="css/output/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/output/main.css">
+    <script type="text/javascript" src="js/output/jquery.min.js"></script>
+    <script type="text/javascript" src="js/output/swiper-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/output/layout.js"></script>
+    <script type="text/javascript" src="js/output/main.js"></script>
+    <link href="css/output/seat/boxy.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="js/output/cinemacljs.js"></script>
+    <script type="text/javascript" src="js/output/seat/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="js/output/seat/boxy.js"></script>
+
+    <script>
+        //上行登录
+        var _mevents = [];
+        function setWebitEvent(evtName, evtCode) {
+            if (evtName == "") {
+                return;
+            }
+            _mevents.push(JSON.stringify({
+                code : evtCode,
+                name : evtName
+            }));
+        };
+
+        function getWebkitEventCode() {
+            return _mevents.length > 0 ? _mevents.shift() : "0";
+        };
+    </script>
+
+
+    <script src="js/output/seat/seatpay.js" type="text/javascript"></script>
+    <script src="js/output/seat/order_mobile.js" type="text/javascript"></script>
+
+    <style>
+        .pay-discount-item,.card-button,.pay-way-item,button,.button,a{
+            -webkit-tap-highlight-color:rgba(255,255,255,0);
+        }
+        a{
+            text-decoration: none;
+            color:#000;
+        }
+        .alert.active{display: block}
+        .alert{position: fixed;width: 2.7306rem;height: 100%;top: 0px;left: 0px;margin:0px auto;left:0;right:0;background-color:rgba(0,0,0,0.3);display: none;}
+        .alert .alertContent{width:80%;background-color:#fff;margin:0px auto;padding-top: 0.3413rem;text-align: center;border-radius: 8px;margin-top: 1.8rem;}
+        .alert .alertContent h3{font-weight: 400;font-size: 0.128rem;margin-bottom: 0.1706rem;}
+        .alert .alertContent p{font-size: 0.0853rem;color:#999;margin-top: 0.0853rem;}
+        .alert .alertContent .button-group{width:100%;height:0.3754rem;margin-top:0.2133rem;border-top: 1px solid #ccc;}
+        .alert .alertContent .button{width: 50%;height: 100%;float: left;}
+        .alert .alertContent .button p{line-height: 0.3rem;margin-top: 0.03rem;font-size: 0.1536rem;}
+        .alert .alertContent .button.ok p{color:#54E06C;border-left:1px solid #ccc;box-sizing: border-box;}
+    </style>
+</head>
+<body style="background:#eee;position:relative">
+<!--等待中-->
+<div class="waiting">
+    <div style="width: 50px;height: 50px;box-sizing: border-box;border: 3px solid #ccc;border-left-color: #000;margin: 0px auto;margin-top:2rem;border-radius: 100px;animation: run 1s infinite ease-in-out;-webkit-animation: run 1s infinite ease-in-out;"></div>
+</div>
+<div class="out-head">
+    <div class="out-head-left">
+        <a onclick="window.history.go(-1)"><img src="images/output/reback.png" alt="回退"></a>
+    </div>
+    <div class="out-head-right">
+        <span>请支付</span>
+    </div>
+</div>
+<div style="height:0.3413rem"></div>
+<div class="seaction seactionBuy active">
+    <div class="pay-head">
+
+    </div>
+    <div class="pay-confirm">
+
+    </div>
+</div>
+<div class="alert">
+    <div class="alertContent">
+
+    </div>
+</div>
+</body>
+</html>

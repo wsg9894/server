@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <{foreach from="$DATA" item="V"}>
+        <tr>
+            <td><{$V.sAdminUserName}></td>
+            <td><{$V.sCreateUser}></td>
+        </tr>
+    <{/foreach}>
+</table>
+</body>
+</html>

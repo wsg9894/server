@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>E票网</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/output/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/output/main.css">
+    <script type="text/javascript" src="js/output/jquery.min.js"></script>
+    <script type="text/javascript" src="js/output/swiper-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/output/layout.js"></script>
+    <script type="text/javascript" src="js/output/main.js"></script>
+    <script type="text/javascript" src="js/output/cinemacljs.js"></script>
+    <script type="text/javascript" src="js/output/pinyin.js"></script>
+    <script>
+        var request = GetRequest();
+        var movieId = request.iMovieID;
+        var lat = localStorage.getItem("latitudeP");
+        var lon = localStorage.getItem("longitudeP");
+        if (lat == "" || lat == undefined || lat == null)lat = 39.914428;
+        if (lon == "" || lon == undefined || lon == null)lon = 116.582974;
+        $(function(){
+            setCinemaSearchLog();
+            $('input:text:first').focus();
+            var $inp = $('input:text');
+            $inp.bind('keydown', function (e) {
+                var key = e.which;
+                if (key == 13) {
+                    setCinemaSearchLog($inp.val())
+                    getCinemaSearch();
+                }
+                if (key == 32) {
+                    setCinemaSearchLog($inp.val());
+                    getCinemaSearch();
+                }
+            });
+        })
+        function setCinemaSearchLog(search)
+        {
+            if(search == undefined || search == "undefined"){
+                $.ajax({
+                    type:'get',
+                    url:'index.php?r=output/Ajax/GetCinemaSearchLog',
+                    dataType:'json',
+                    success:function(msg){
+                        if(msg.ok){
+                            var html = "";
+                            $(msg.data).each(function(idx, item) {
+                                html += '<div class="search-history-item-left">'
+                                        + '<img src="/public/front-2.0/images/index_0.png" alt="">'
+                                        +'</div>'
+                                        +'<div class="search-history-item-right">'
+                                        +'<p><span style="position: absolute ;left:0.35rem;margin-top:0.012rem;width:2.4rem;height:0.3rem;" onclick="getCinemaSearch('+item['searchid']+')">'+item['search']+'</span>' +
+                                        '<span style="position: absolute ;right:0.1rem;width:0.3rem;height:0.3rem;" onclick="delsearch('+item['searchid']+')"><img style="width:0.1rem;margin-left: 0.1rem" src="/viewlibs/default/templates/cinema/images/sc.png"/></span></p>'
+                                        +'</div>'
+                            })
+                            if(html != ""){
+                                html += "<div style='text-align: center;color:#666;font-size: 0.12rem;line-height: 2rem;' onclick='delsearch()'>清除历史纪录<img style='width:0.2rem;height:0.11rem;margin-left: 0.05rem;' src='/viewlibs/default/templates/cinema/images/dele.png'/></div>";
+                            }
+                            $('.search-history-item').html(html);
+                            $('.search-history-item').addClass('active');
+                            $('.search-none').removeClass('active');
+                            $('.search-result').removeClass('active');
+                        }
+                    },
+                    error:function(){
+                        return false;
+                    }
+                });
+            }else{
+                if(search != " " && search != "" && search != 'null'){
+                    $.ajax({
+                        type:'get',
+                        url:'index.php?r=output/Ajax/SetCinemaSearchLog',
+                        data: {search:search},
+                        dataType:'json',
+                        success:function(msg){
+                            return true;
+                        },
+                        error:function(){
+                            return false;
+                        }
+                    });
+                }
+            }
+        }
+
+        function getCinemaSearch(searchid){
+            var cityId = localStorage.getItem("cityId");
+            if(searchid == undefined || searchid == "undefined" || searchid == "" || searchid == " " || searchid == null){
+                var $inp = $('input:text');
+                if($inp.val() == " " || $inp.val() == "" || $inp.val() == 'null'){
+                    setCinemaSearchLog();
+                }else{
+                    var search = $inp.val().replace(' ', "");
+                    if(search.length == 1){
+                        var $inp = $('input:text');
+                        if($inp.val() == " " || $inp.val() == "" || $inp.val() == 'null'){
+                            setCinemaSearchLog();
+                            return false;
+                        }
+                    }
+                    if (cityId == "" || cityId == " " || cityId == null)
+                    {
+                        getCinemaList(1,search);
+                    }
+                    else
+                    {
+                        getCinemaList(cityId,search);
+                    }
+                }
+            }else{
+                $.ajax({
+                    type: 'get',
+                    url: '/ajax/cinema.php',
+                    data: {cmd:1, subcmd:'9',searchid:searchid},
+                    dataType: 'json',
+                    success: function (msg) {
+                        $('input:text').val(msg.data.search);
+                        var search = msg.data.search.replace(' ', "");
+                        if (cityId == "" || cityId == " " || cityId == null)
+                        {
+                            getCinemaList(1,search);
+                        }
+                        else
+                        {
+                            getCinemaList(cityId,search);
+                        }
+                    },
+                    error: function () {
+                        return false;
+                    }
+                });
+            }
+        }
+
+        function getCinemaList(iCityId,Search)
+        {
+            if(movieId == undefined || movieId == "undefined"){
+                movieId = 0;
+            }
+            var $inp = $('input:text');
+            $.ajax({
+                type:'get',
+                url:'index.php?r=output/Ajax/GetSearchCinemaInfo',
+                data: {iCityID:iCityId,search:Search,iMovieID:movieId,longitude:lon,latitude:lat},
+                dataType:'json',
+                success:function(msg){
+                    if (msg.ok)
+                    {
+                        if($inp.val().length == 0){
+                            setCinemaSearchLog();
+                        }else{
+                            showCinema(msg.data)
+                        }
+                    }else{
+                        if($('input:text').val() != "" && $('input:text').val() != " " && $('input:text').val() != null){
+                            if(Search.length <= 10){
+                                //<img src="/public/front-2.0/images/searchnone.png" alt="">
+
+                                var str = '<img src="/public/front-2.0/images/searchnone.png" alt="">' +
+                                        '<p>十分抱歉，暂无"<span>'+Search+'</span>"相关影院</p>';
+                                $('.search-none').html(str);
+                                $('.search-none').addClass('active');
+                                $('.search-history-item').removeClass('active');
+                                $('.search-result').removeClass('active');
+                            }
+                        }
+                        //抱歉，没有找到<span style='color: red'>"+Search+"</span>相关影院
+                        //setCinemaSearchLog();
+                    }
+                },
+                error:function(){
+                    return false;
+                }
+            });
+            return false;
+        }
+        function showCinema(arcinema)
+        {
+            var sign = -1;
+            var $inp = $('input:text');
+            var string1 = $inp.val();
+            for(var i=0;i<string1.length;i++){
+                var c=string1.charAt(i);
+                if(c<'A' || c>'Z'){
+                    sign = 0;
+                }
+            }
+
+            var htmlcontent = '';
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var day = now.getDate();
+            if (month <10)
+            {
+                month = '0' + month;
+            }
+            if (day <10)
+            {
+                day = '0' + day;
+            }
+            var nowStr = year+"-"+month+"-"+day;
+            for (var i=0;i<arcinema.length;i++)
+            {
+                item = arcinema[i]['cinemaInfo'];
+                item1 = arcinema[i];
+                var mPrice=0;
+                if(typeof (item1['minPrice']) == 'undefined'){
+                    continue;
+                }
+                if(parseInt(item1['minPrice'].split(".")[1]) == 0)
+                {
+                    mPrice = parseInt(item1['minPrice']);
+                }else{
+                    mPrice = parseFloat(item1['minPrice']).toFixed(1);
+                }
+                var specialPrice =mPrice+'元<small>起</small>' ;
+                if (item1['minPrice']<34)
+                {
+                    specialPrice = mPrice+'元<small>起</small>特价';
+                }
+
+                //拼音汉字首字母大写检索
+                var str = ClearNullArr(spell(pinyin.getFullChars(item['sCinemaName'])));
+                var arr = [];
+                if ((escape($inp.val())).indexOf( "%u" )<0 && ClearNullArr(spell(pinyin._getChar($inp.val()))).length==1)
+                {
+                    //pinyin
+                    var string = ClearNullArr(spell(pinyin._getChar($inp.val())));
+                    arr = Chinese(string,str);
+                    if(arr.length == 0){
+                        arr = Chinese(string.join(",").split(""),item['FirstPinyin'].split(""));
+                        if(arr.length == 0){
+                            for(var k = 0;k<str.length;k++){
+                                for(var j = 0;j<string.length;j++){
+                                    if(str[k].toLocaleLowerCase().indexOf(string[j].toLocaleLowerCase()) >= 0){
+                                        arr.push(k)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if(escape($inp.val()).indexOf( "%u" )<0){
+                    //简拼（SJCD、sjcd）
+                    var string = ClearNullArr(spell(pinyin.getFullChars($inp.val())));
+                    if(sign == 0){
+                        string[0] = string1
+                        string.splice(1,string.length);
+                        arr = Chinese(string,str);
+                        if(arr.length == 0){
+                            arr = Chinese(string,item['FirstPinyin'].split(""));
+                        }
+                    }else{
+                        arr = Chinese(string,item['FirstPinyin'].split(""));
+                    }
+                }else{
+                    //中文
+                    var str = item['sCinemaName'];
+                    var string = $inp.val();
+                    for(var k = 0;k<str.length;k++){
+                        if(string == str[k]){
+                            arr.push(k);
+                        }else {
+                            var str1 = "",tot=0;
+                            for (var j = k; j < str.length; j++) {
+                                str1 += str[j]
+                                if (string == str1) {
+                                    for(var m = 0;m<=tot;m++){
+                                        arr.push(k+m);
+                                    }
+                                    break;
+                                }else{
+                                    tot++
+                                }
+                            }
+                        }
+                    }
+                }
+                var sCinemaName = "";
+                var cinema = item['sCinemaName'].split("");
+                var fl = -1;
+                for(var m = 0;m<cinema.length;m++){
+                    for(var j=0;j< arr.length;j++){
+                        if(arr[j] == m){
+                            if(escape(cinema[m]).indexOf( "%u" )<0){
+                                sCinemaName += "<span style='color: red;width:0.55rem;'>"+cinema[m]+"</span>";
+                            }else{
+                                sCinemaName += "<span style='color: red;width:0.2rem;'>"+cinema[m]+"</span>";
+                            }
+                            fl = m;
+                            break;
+                        }
+                    }
+                    if(fl != m){
+                        if(escape(cinema[m]).indexOf( "%u" )<0){
+                            sCinemaName += "<span style='width:0.55rem;'>"+cinema[m]+"</span>";
+                        }else{
+                            sCinemaName += "<span style='width:0.2rem;'>"+cinema[m]+"</span>";
+                        }
+                    }
+                }
+                var str = "";
+                if(item['bIs4D'] == 1){
+                    str+='<span class="d4">4D</span>';
+                }
+                if(item['bIsDUBI'] == 1){
+                    str+='<span class="dubi">杜比</span>';
+                }
+                if(item['bIsIMAX'] == 1){
+
+                    str+='<span class="imax">IMAX</span>';
+                }
+                if(item['bIsJUMU'] == 1){
+                    str+='<span class="jumu">巨幕</span>';
+                }
+                if(item['bIsCarPark'] == 1){
+                    str+='<span class="p">停车场</span>';
+                }
+                if(item['bIs4K'] == 1){
+                    str+='<span class="vip">4K</span>';
+                }
+                htmlcontent +='<a style="color:#000" onclick="goupiao(this,'+item["iCinemaID"]+','+nowStr+')">'
+                        +  '<div class="cinema-table-info-cinema">'
+                        + '<h3>'+sCinemaName+'<span class="price">'+specialPrice+'</span></h3>'
+                        +'<p>'+item["sAddress"]+'<small>'+item["dist"]+'km</small></p>'
+                        + '<p style="margin-top: 0.1706rem;">'+str+'</p>'
+                        + '</div>'
+                        + '</a>'
+            };
+            if (htmlcontent == '')
+            {
+                htmlcontent  = '暂无';
+            }
+            $('.search-result').html(htmlcontent);
+            $('.search-result').addClass('active');
+            $('.search-history-item').removeClass('active');
+            $('.search-none').removeClass('active');
+        }
+        function goupiao(that,iCinemaID,nowStr){
+            var $inp = $('input:text');
+            setCinemaSearchLog($inp.val());
+            $(that).attr('href','arrangeselect.php?cinemaId='+iCinemaID+'&movieId='+movieId+'&datetime='+nowStr+'');
+        }
+
+        function spell(str){
+            var t = "";
+            for(var i=0;i<str.length;i++){
+                var c=str.charAt(i);
+                if(c<'A' || c>'Z'){
+                    t += str[i]
+                }else{
+                    t += ","+str[i]
+                }
+            }
+            return t.split(',');
+        }
+        function ClearNullArr(arr){
+            for(var i=0,len=arr.length;i<len;i++){
+                if(!arr[i]||arr[i]==''||arr[i] === undefined){
+                    arr.splice(i,1);
+                    len--;
+                    i--;
+                }
+            }
+            return arr;
+        }
+        function unique(arr){
+// 遍历arr，把元素分别放入tmp数组(不存在才放)
+            var tmp = new Array();
+            for(var i in arr){
+//该元素在tmp内部不存在才允许追加
+                if(tmp.indexOf(arr[i])==-1){
+                    tmp.push(arr[i]);
+                }
+            }
+            return tmp;
+        }
+        function Chinese(string,str){
+            var sign = -1,pox = -1;
+            var arr = [];
+            for(var k = 0;k<string.length;k++){
+                for(var j = 0;j<str.length;j++){
+                    if(string[k].toLocaleLowerCase() == str[j].toLocaleLowerCase()){
+                        sign++;pox = j;
+                        arr.push(pox)
+                    }else if(string[k].toLocaleLowerCase().indexOf(str[j].toLocaleLowerCase()) == 0){
+                        sign++;pox = j;
+                        arr.push(pox)
+                    }else if(string[k].toLocaleLowerCase().indexOf(str[j].toLocaleLowerCase()) > 0){
+                        if(sign >= 0){
+                            pox = j;
+                            arr.push(pox)
+                        }
+                    }
+                }
+            }
+            arr = unique(arr).sort(function(a,b){
+                return a-b})
+            var t = 0;
+            var arr1 = [];
+            if(string.length > 1){
+                for(var j=0;j< arr.length;j++){
+                    if(string[0].toLocaleLowerCase() != str[arr[j]].toLocaleLowerCase()){
+
+                    }else{
+                        for(var i = 1;i < string.length;i++){
+                            if(arr[j+i] - arr[j] == i && string[i].toLocaleLowerCase() == str[arr[j+i]].toLocaleLowerCase()){
+                                t++;
+                            }
+                        }
+                    }
+                    if(t == string.length -1){
+                        for(var i = 0;i < string.length;i++){
+                            arr1.push(arr[j+i]);
+                        }
+                        break;
+                    }
+                }
+            }else{
+                for(var i = 0;i < arr.length;i++){
+                    if(string[0].toLocaleLowerCase() == str[arr[i]].toLocaleLowerCase()){
+                        arr1.push(arr[i]);
+                    }else {
+                        var str1 = "",tot=0;
+                        for (var j = i; j < arr.length; j++) {
+                            str1 += str[arr[j]].toLocaleLowerCase()
+                            if (string[0].toLocaleLowerCase() == str1) {
+                                for(var k = 0;k<=tot;k++){
+                                    arr1.push(arr[i + k]);
+                                }
+                                break;
+                            }else{
+                                tot++
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(arr1.length == 0){
+                return arr;
+            }
+            return arr1;
+        }
+        function searchquxiao(){
+            window.history.back();
+        }
+    </script>
+</head>
+<body>
+<div class="search-head">
+    <div class="search-head-box">
+        <img src="/public/front-2.0/images/search.png" alt="">
+        <input type="text" placeholder="搜索影院" onkeyup="getCinemaSearch()">
+    </div>
+    <p onclick="searchquxiao()">取消</p>
+</div>
+<div class="search-history">
+    <div class="search-history-item">
+
+    </div>
+</div>
+<div class="search-result">
+
+</div>
+<div class="search-none">
+
+</div>
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</body>
+</html>

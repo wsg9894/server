@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>E豆商城</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/point.css">
+    <script type="text/javascript" src="js/scoreStore/index.js"></script>
+
+<!--微信分享功能实现-->
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript">
+function wxShare()
+{
+	wx.config({
+
+    debug: false,
+    appId: '<{$SIGNPACKAGE.appId}>',
+    timestamp: '<{$SIGNPACKAGE.timestamp}>',
+    nonceStr: '<{$SIGNPACKAGE.nonceStr}>',
+    signature: '<{$SIGNPACKAGE.signature}>',
+    jsApiList: [
+        // 所有要调用的 API 都要加到这个列表中
+		'onMenuShareAppMessage',
+		'onMenuShareQQ',
+		'onMenuShareTimeline',
+		'onMenuShareQZone',
+		]
+	});
+
+	wx.ready(function(){
+		//分享给朋友
+		wx.onMenuShareAppMessage({
+			title: '<{$WXSHARECONF.wxTitle}>', // 分享标题
+			desc: '<{$WXSHARECONF.wxDesc}>', // 分享描述
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site', // 分享链接
+			imgUrl: '<{$WXSHARECONF.wxPic}>', // 分享图标
+			type: '', // 分享类型,music、video或link，不填默认为link
+			dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+			success: function (e) {
+				// 用户确认分享后执行的回调函数
+			},
+			cancel: function (e) {
+				// 用户取消分享后执行的回调函数
+			}
+		});
+		//分享到qq
+		wx.onMenuShareQQ({
+			title: '<{$WXSHARECONF.wxTitle}>', // 分享标题
+			desc: '<{$WXSHARECONF.wxDesc}>', // 分享描述
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site', // 分享链接
+			imgUrl:'<{$WXSHARECONF.wxPic}>', // 分享图标
+		});
+		
+		//分享到朋友圈
+		wx.onMenuShareTimeline({
+			title: '<{$WXSHARECONF.wxTitle}>', // 分享标题
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site', // 分享链接
+			imgUrl: '<{$WXSHARECONF.wxPic}>', // 分享图标
+		});
+		
+		//分享到QQ空间
+		wx.onMenuShareQZone({
+			title: '<{$WXSHARECONF.wxTitle}>', // 分享标题
+			desc: '<{$WXSHARECONF.wxDesc}>', // 分享描述
+			link: '<{$BASEURL}>project/index.php?r=scoreStore/Site', // 分享链接
+			imgUrl: '<{$WXSHARECONF.wxPic}>', // 分享图标
+		});
+
+	});//ready 结束
+
+}
+
+wxShare();
+</script>
+<!--微信分享功能实现 结束-->
+</head>
+
+<body>
+    <div id="member">
+		<{if is_array($UINFO) and FALSE==empty($UINFO.iUserID)}>
+		<p class="left"><img src="images/imgs_03.png" alt=""><span><{$UINFO.sPhone}></span></p>
+		<a href="index.php?r=scoreStore/Site/myScore&uid=<{$UINFO.iUserID}>" class="right" >E豆:<span><{$UINFO.iCurScore}></span>&gt;</a>
+		<{else}>
+		<p class="left"><img src="images/imgs_03.png" alt=""><span>未登录</span></p>
+		<a href="../usercenter/login.html?go=<{$BASEURL}>project/index.php?r=scoreStore/Site" class="right" style="color:red">去登录<span style="color:#666">&gt;</span></a>
+		<{/if}>
+    </div>
+    <div id="shopContent">
+		<div class="tabs">
+			<ul>
+				<li name="tab">E豆商城</li>
+				<li class="hr"></li>
+				<a href="index.php?r=scoreStore/Site/Invite"><li name="tab">赚取E豆</li></a>
+			</ul>
+		</div>
+		<div class="tabsContents">
+			<div class="tabsContent" name="tabsContent">
+
+				<{section name=GOODSLOOP loop=$GOODSLIST}>
+				<a href="index.php?r=scoreStore/Site/GoodsDetail&gid=<{$GOODSLIST[GOODSLOOP].gid}>">
+					<div class="goods" name="goods">
+					<div style="position:relative;height:100%" name="good-box">
+					<{if $smarty.section.GOODSLOOP.index%2==0}>
+					<span class="sideLeft side" name="side"><img src="images/imgs_17.png" alt=""></span>
+					<p class="timeLeft time" name="time<{$GOODSLIST[GOODSLOOP].gid}>"></div>
+					<{else}>
+					<span class="sideRight side" name="side"><img src="images/imgs_17.png" alt=""></span>
+					<p class="timeRight time" name="time<{$GOODSLIST[GOODSLOOP].gid}>"></div>
+					<{/if}>
+
+					<img src="<{$GOODSLIST[GOODSLOOP].list_pic}>" alt="" class="good" name="good">
+					<p class="title"><{$GOODSLIST[GOODSLOOP].name}></p>
+					<{if $GOODSLIST[GOODSLOOP].allow_day<=0}>
+					<p class="content"><{$GOODSLIST[GOODSLOOP].price}>E豆<span><img src="images/over.png" style="width:0.4rem;" alt=""></span></p>
+					<{else}>
+					<!--<p class="content"><{$GOODSLIST[GOODSLOOP].price}>E豆<span><{$GOODSLIST[GOODSLOOP].allow_day}>份</span></p>-->
+					<p class="content"><{$GOODSLIST[GOODSLOOP].price}>E豆</p>
+					<{/if}>
+
+					</div>
+				</a>
+				<script>
+				timeCounting('time<{$GOODSLIST[GOODSLOOP].gid}>','<{$GOODSLIST[GOODSLOOP].startline}>','<{$GOODSLIST[GOODSLOOP].endline}>',<{$GOODSLIST[GOODSLOOP].allow_day}>);
+				</script>
+				<{/section}>
+
+				<div class="foot" id="foot">
+					<p class="title">商城介绍</p>
+					<p>1.E豆商城是E票网全新推出的福利系统，让您的消费更超值；
+					<br>2.邀请好友，参加购券，在线支付等方式均可获取海量E豆；
+					<br>3.E豆可在商城兑换限量周边、免费影券、合作平台超值福利等；
+					<br>4.通过非法手段获取E豆，予以封号处理，情节严重者，E票网保留追究法律责任的权利。</p>
+				</div>
+			</div>
+			<div class="tabsContent" name="tabsContent">
+				<a href="index.php?r=scoreStore/Site/Invite">
+				<div class="earnContent">
+					<p style="top:6%">邀请新朋友</br>一起享福利</p>
+					<img src="images/E_03_01.png" alt="">
+					<p class="a">查看详情</p>
+				</div>
+				</a>
+				<a href="index.php?r=scoreStore/Site/joinAct">
+				<div class="earnContent">
+					<p>参与购券领E豆</p>
+					<img src="images/E_05.png" alt="">
+					<p class="a">查看详情</p>
+				</div>
+				</a>
+				<a href="index.php?r=scoreStore/Site/BuyTicket">
+				<div class="earnContent">
+					<p>在线订座领E豆</p>
+					<img src="images/E_09.png" alt="">
+					<p class="a">查看详情</p>
+				</div>
+				</a>
+				<div class="earnContent">
+					<p style="top:40%">静等开启...</p>
+				</div>
+			</div>
+		</div>
+    </div>
+<script>tabs(<{$TAB}>);</script>
+
+<div style="display:none">
+<script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228"></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>下载榜</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/movieGame/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/movieGame/main.css">
+    <script type="text/javascript" src="js/movieGame/jquery.min.js"></script>
+    <script type="text/javascript" src="js/movieGame/swiper-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/movieGame/layout.js"></script>
+    <script type="text/javascript" src="js/movieGame/main.js"></script>
+</head>
+<body>
+    <div class="ranking-head">
+        <a href="/project/index.php?r=partner/Game/Ranking&from=5">
+            <div class="ranking-head-item">
+                <p>影视同期榜</p>
+            </div>
+        </a>
+        <a href="/project/index.php?r=partner/Game/Download&from=5">
+            <div class="ranking-head-item active">
+                <p>下载榜</p>
+            </div>
+        </a>
+        <a href="/project/index.php?r=partner/Game/Hotlist&from=5">
+            <div class="ranking-head-item">
+                <p>火热榜</p>
+            </div>
+        </a>
+        <a href="/project/index.php?r=partner/Game/Newlist&from=5">
+            <div class="ranking-head-item" >
+                <p>新品榜</p>
+            </div>
+        </a>
+    </div>
+    <div class="ranking-tabContent">
+        <div class="ranking-tabContent-item active">
+            <div class="cHr"></div>
+            <div class="ranking-movie-month">
+                <div class="index-hot-title">
+                    <h3>下载榜</h3>
+                </div>
+                <{foreach from="$DOWNGAMELIST" key="mykey1" item="RANKLIST"}>
+                    <div class="index-hot-item">
+                        <div class="index-hot-item-left">
+                            <span>
+                                <{if $mykey1 == 0}><img style="height:auto;" src="images/movieGame/Au.png" alt="">
+                                <{elseif $mykey1 == 1}><img style="height:auto;" src="images/movieGame/Ag.png" alt="">
+                                <{elseif $mykey1 == 2}><img style="height:auto;" src="images/movieGame/Cu.png" alt="">
+                                <{else}>
+                                <{$mykey1+1}>
+                                <{/if}>
+                            </span>
+                            <img src="<{$RANKLIST.img}>" alt="">
+                        </div>
+                        <div class="index-hot-item-right">
+                            <a href="/project/index.php?r=partner/Game/Gamedetail&gid=<{$RANKLIST.gid}>&from=5">
+                            <h3><{$RANKLIST.gname}></h3>
+                            <p class="notice"><{$RANKLIST.describe}></p>
+                            <p class="tip"><{$RANKLIST.cate}> | <{$RANKLIST.num_people}></p>
+                            </a>
+                            <button onclick="getAJAX('<{$RANKLIST.gid}>','/project/index.php?r=partner/Game/Install','gid',insertGame)"><{$RANKLIST.install}></button>
+                        </div>
+                    </div>
+                <{/foreach}>
+            </div>
+        </div>
+    </div>
+    <div class="game-href" style="position:fixed;z-index: 1000;left: 10%;bottom:4%;width: 15%;height: 15%;">
+        <a href="/project/index.php?r=partner/Game/Index&from=24"><img src="images/movieGame/gamehref.png" style="width: 100%;float: right;margin-right: 0.0853rem;margin-top: 0.0853rem;" ></a>
+    </div>
+    <div class="hide-tip" style="position:fixed;z-index: 1000;left: 0px;top: 0px;width: 100%;height: 100%;background-color: rgba(0,0,0,0.6);display: none">
+        <img src="images/movieGame/rightup.png" style="width: 60%;float: right;margin-right: 0.0853rem;margin-top: 0.0853rem;" >
+    </div>
+<script>
+    //ajax请求
+    function getAJAX(id,url,fl,fun){
+        if(fl == "pid"){
+            var jsonData = {pid:id};
+        }else{
+            var jsonData = {gid:id};
+        }
+        $.ajax({
+            url: url,
+            data: jsonData,
+            type: "post",
+            success: function (data) {
+                var json_str = JSON.parse(data);
+                fun(json_str);
+            },error: function (error) {
+
+            }
+        });
+    }
+
+    function insertGame(json_str){
+        if(json_str.ERRORGAME == 0){
+            alert("请选择正确的下载/打开列表");
+            location.href = json_str.HREF;
+        }else if(json_str.ERRORGAME == "isWeixin"){
+            $('.hide-tip').css("display","block");
+        }else{
+            location.href = json_str.HREF;
+        }
+    }
+
+    $('.hide-tip').click(function(){
+        $('.hide-tip').css("display","none");
+    });
+
+</script>
+    <script type="text/javascript" src="js/movieGame/iosreload.js"></script>
+    <script type="text/javascript" src="js/movieGame/tab.js"></script>
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+    </div>
+</body>
+</html>

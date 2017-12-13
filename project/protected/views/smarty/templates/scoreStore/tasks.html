@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>每日任务</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/main.css">
+    <script type="text/javascript" src="js/scoreStore/layout.js"></script>
+	<script src="../js/lib/jquery-1.8.2.min.js" type="text/javascript"></script>
+</head>
+<body class="task">
+    <div id="overflow">
+        <div class="task-head">
+            <img src="images/scoreStore/task_bg.png">
+            <div class="head-group">
+                <a href="/project/index.php?r=scoreStore/Site">
+                <div class="head-item">
+                    <div><img src="images/scoreStore/task_01.png"></div>
+                    <p class="head-item-alt">去商城</p>
+                </div>
+                </a>
+
+				<a href="/project/index.php?r=scoreStore/Site/myScore">
+                <div class="head-item"> 
+                    <div><p><{$UINFO.iCurScore}></p></div>
+                    <p class="head-item-alt">E豆（个）</p>
+                </div>
+				</a>
+                <div class="hr"></div>
+            </div>
+       </div>
+        <div class="task-group">
+            <div id="signTask" class="task-item <{if $ISSIGNINTODAY}>active<{/if}>">
+                <img class="task_item_img" src="images/scoreStore/task_item_01.png">
+                <img id="signIn" class="task_item_icon" style="width:0.3755rem;height:0.4011rem;" src="images/scoreStore/task_02.png">
+                <img class="task_item_icons" style="width:0.3755rem;height:0.4011rem;" src="images/scoreStore/task_02_0.png">
+                <img class="task_item_sign" src="images/scoreStore/task_02_1.png">
+                <p>微信签到即送e豆</p>
+                <div class="progress-group">
+                    <div class="progress-bar">
+                        <div class="progerss-content"></div>
+                    </div>
+                    <div class="progerss-alt"><p><{if $ISSIGNINTODAY}>1<{else}>0<{/if}>/1</p></div>
+                </div>
+            </div>
+            <div class="task-item <{if $INVITECOUNTTODAY>=$INVITERDAYLIMIT}>active<{/if}>">
+                <img class="task_item_img" src="images/scoreStore/task_item_02.png">
+                <a href="/project/index.php?r=scoreStore/Site/Invite"><img class="task_item_icon" style="width:0.4096rem;height:0.4181rem;" src="images/scoreStore/task_03.png"></a>
+                <img class="task_item_icons" style="width:0.4096rem;height:0.4181rem;" src="images/scoreStore/task_03_0.png">
+                <p>邀请好友即得E豆</p>
+                <div class="progress-group">
+                    <div class="progress-bar">
+                        <div class="progerss-content" id="value1"></div>
+                    </div>
+                    <div class="progerss-alt"><p><{$INVITECOUNTTODAY}>/<{$INVITERDAYLIMIT}></p></div>
+                </div>
+            </div>
+            <div id="consume" class="task-item">
+                <img class="task_item_img" src="images/scoreStore/task_item_03.png">
+                <img class="task_item_icon" style="width:0.512rem;height:0.4864rem;" src="images/scoreStore/task_04.png">
+                <img class="task_item_icons" style="width:0.512rem;height:0.4864rem;" src="images/scoreStore/task_04_0.png">
+                <p>每在E票网消费1元即送1E豆</p>
+                <div class="progress-group">
+                    <div class="progress-bar">
+                        <div class="progerss-content" id="value2"></div>
+                    </div>
+                    <div class="progerss-alt"><p><{$COSTSCORETODAY}>/<{$COSTSCORELIMIT}></p></div>
+                </div>
+            </div>
+            <div class="task-item <{if $ISBINDING}>active<{/if}>" style="margin-bottom:0px;font-size:0px;">
+                <img class="task_item_img" style="border:none;" src="images/scoreStore/task_item_04.png">
+                <a href="/huodong/bangding/index.php"><img class="task_item_icon" style="width:0.3627rem;height:0.4352rem;" src="images/scoreStore/task_05.png"></a>
+                <img class="task_item_icons" style="width:0.3627rem;height:0.4352rem;" src="images/scoreStore/task_05_0.png">
+                <p style="font-size:0.1rem;">绑定微信送e豆</p>
+                <div class="progress-group">
+                    <div class="progress-bar">
+                        <div class="progerss-content"></div>
+                    </div>
+                    <div class="progerss-alt"><p><{if $ISBINDING}>1<{else}>0<{/if}>/1</p></div>
+                </div>
+            </div>
+        </div>
+        <div class="alert" id="alert">
+            <div id="signSuccess" class="alertContent" style="width:69.86%;height:2.0608rem;">
+                <img src="images/scoreStore/task_alert_0.png">
+				<{if $ISSIGNINTODAY}>
+                <p style="bottom: 0.48rem;left:0.64rem;">0</p>
+                <p style="bottom: 0.48rem;right: 0.325rem;">0</p>
+				<{else}>
+                <p style="bottom: 0.48rem;left:0.64rem;"><{$USERSIGNINCOUNT.signInDays+1}></p>
+                <p style="bottom: 0.48rem;right: 0.325rem;"><{$USERSIGNINCOUNT.signInSum+$SIGNINCONF}></p>
+				<{/if}>
+            </div>
+            <div id="signFail" class="alertContent" style="width:62.67%;height:1.7963rem;">
+                <img src="images/scoreStore/task_alert_1.png">
+            </div>
+            <div id="needBind" class="alertContent" style="width:62.67%;height:1.7963rem;">
+                <img src="images/scoreStore/task_alert_3.png">
+            </div>
+            <div id="consumeMenu" class="alertContent" style="width:85.33%;height:1.7835rem;">
+                <img src="images/scoreStore/task_alert_2.png">
+                <a href="/cinema/movieselect.php"><input type="button" value="在线选座"></a>
+                <a href="/huodong/huodongList.html"><input type="button" value="看看活动券" style="left:55%;background-color: #fff;color:#eb6100"></a>
+            </div>
+			<div id="phoneBind" class="alertContent" style="width:62.67%;height:1.7963rem;">
+				<a href="/huodong/bangding" style="text-decoration:none">
+				<input type="button" value="立即绑定微信" style="width:60%;left:20%;bottom:0.7rem;height:0.3rem;background-color:#fcf53f;box-shadow:0px 5px #f3c301;border:#fcf53f;color:#333;">
+				</a>
+                <img src="images/scoreStore/phoneBind.png">
+            </div>
+			<div id="warningNotice" class="alertContent" style="width:62.67%;height:1.7963rem;">
+                <img src="images/scoreStore/warningNotice.png">
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+    window.onload=function(){
+        var alert=document.getElementById('alert');
+        alert.onclick=function(){
+            showAlert()
+        }
+        var signIn=document.getElementById('signIn');
+        signIn.onclick=function(){
+            showAlert(1)
+        }
+        var consume=document.getElementById('consume');
+        consume.onclick=function(){
+            showAlert(3)
+        }
+
+		progress(<{$INVITECOUNTTODAY}>,1,<{$INVITERDAYLIMIT}>)
+        progress(<{$COSTSCORETODAY}>,2)
+    }
+    ////设置弹出层内容
+    var alertFlag=false;
+    //判断是否微信
+    var weixin=<{$ISWXVISITOR}>;
+	//var weixin=1;
+    var bind=<{$ISBINDING}>;
+	//var bind=0;
+    var accountBind=<{$ISACCOUNTBINDING}>;
+	//var accountBind=0;
+	var signSuccess=document.getElementById('signSuccess');
+	var signTask=document.getElementById('signTask');
+
+    function showAlert(arg){
+        var alert=document.getElementById('alert');
+        var alertHeight=window.innerHeight;
+        var overflow=document.getElementById('overflow');
+        var signFail=document.getElementById('signFail');
+        var needBind=document.getElementById('needBind');
+        var consumeMenu=document.getElementById('consumeMenu');
+		var phoneBind=document.getElementById('phoneBind');
+		var warningNotice=document.getElementById('warningNotice');
+        if(!alertFlag){
+            //显示弹出层
+            if(arg==1){
+                if(weixin){
+                    if(bind){
+						if(accountBind){
+							var getData ={};
+							getData["uid"] = '<{$UINFO.iUserID}>';
+							signIn(getData);
+
+							//signSuccess.style.display='block';
+							//signTask.className='task-item active';
+						}else{
+							warningNotice.style.display='block';
+						}
+						
+                    }else{
+                        phoneBind.style.display='block';
+                    }
+                    
+                }else{
+                    signFail.style.display='block';
+                }
+            }else if(arg==3){
+                consumeMenu.style.display='block';
+            }
+            alert.style.display='block';
+            alert.style.height=alertHeight+'px';
+            overflow.style.height=alertHeight+'px';
+            overflow.style.overflow='hidden';
+            alertFlag=true;
+        }else{
+            //隐藏弹出层
+            signSuccess.style.display='none'
+            signFail.style.display='none'
+            needBind.style.display='none'
+            consumeMenu.style.display='none';
+			warningNotice.style.display='none';
+			phoneBind.style.display='none';
+            alert.style.display='none';
+            alert.style.height='auto';
+            overflow.style.height='auto';
+            overflow.style.overflow='auto';
+            alertFlag=false;
+			
+			//签到，刷新本页
+			window.location.href='/project/index.php?r=scoreStore/Site/Tasks';
+        }
+    }
+    //设置进度条长度
+    function progress(num,item,sum){
+		if(item==2){
+			var valueElement=document.getElementById('value2');
+			var bigger=Math.floor(num/100)*100+100
+			var value=num/bigger*100;
+			valueElement.style.width=value+"%";
+		}else if(item==1){
+			var valueElement=document.getElementById('value1');
+			var value=num/sum*100;
+			valueElement.style.width=value+"%";
+		}
+        
+    }
+
+	//签到
+	function signIn(getData){
+		$.ajax({
+			type : 'post', // 提交方式 get/post
+			url : "index.php?r=scoreStore/Ajax/SignIn", // 需要提交的 url
+			data : getData,
+			success : function(data) {
+				console.log(data);
+				var data = JSON.parse(data);
+				
+				if(data.ok){
+					signSuccess.style.display='block';
+					signTask.className='task-item active';
+				}else{
+				}
+			}
+		});
+	}
+</script>
+
+</body>
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</html>

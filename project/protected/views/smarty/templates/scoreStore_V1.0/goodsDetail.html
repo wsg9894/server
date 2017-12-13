@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>E豆商城</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/scoreStore/point.css">
+    <script type="text/javascript" src="js/scoreStore/details.js"></script>
+	<script src="../js/lib/jquery-1.8.2.min.js" type="text/javascript"></script>
+</head>
+<body>
+	<script type="text/javascript"></script>
+    <div id="title">
+		<a href="<{$BASEURL}>/project/index.php?r=scoreStore/Site">&lt;返回</a>
+		<p><{$GOODSINFO.name}></p>
+    </div>
+
+	<script type="text/javascript"></script>
+    <div id="good_head">
+		<div class="photo">
+			<div class="container" id="container">
+				<ul class="content" id="content">
+				</ul>
+				<ul class="flag" id="flag">
+				</ul>
+			</div>
+		<p class="direc" id="direc"></p>
+
+		</div>
+		<script type="text/javascript"></script>
+		<div class="sell">
+			<h3>单价:<{$GOODSINFO.price}>E豆
+			<a href="index.php?r=scoreStore/Site/Invite" class="btn2" id="btn2">赚E豆</a>
+			<input type="button" value="立即兑换" class="btn1" id="btn1">
+			</h3>
+		</div>
+		<script type="text/javascript"></script>
+		<div class="detail">
+			<div>
+				<h3><span>·</span>商品名称</h3>
+				<p><{$GOODSINFO.name}></p>
+			</div>
+			<div>
+				<h3><span>·</span>商品简介</h3>
+				<p><{$GOODSINFO.desc}></p>
+			
+			</div>
+			<div>
+				<h3><span>·</span>使用流程</h3>
+				<p><{$GOODSINFO.explain}></p>
+			</div>
+		</div>
+    </div>
+	<script type="text/javascript"></script>
+    <div id="hide">
+		<div class="ask" id="ask">
+			<div class="question">
+				<p>确认兑换吗？</p>
+			</div>
+			<input type="button" value="取消" id="hidebtn1">
+			<input type="button" value="确认" id="hidebtn2">
+		</div>
+
+		<div class="success" id="success">
+			<div class="question">
+				<p>兑换成功</p>
+			</div>
+			<a href="index.php?r=scoreStore/Site/myScore&uid=<{$USESSINFO.iUserID}>"><input type="button" value="查看详情" id="hidebtn"></a>
+		</div>
+		<div class="fail" id="fail">
+			<div class="question">
+				<p>该商品已抢光</p>
+			</div>
+			<input type="button" value="确定" id="hidebtnn">
+		</div>
+    </div>
+<script type="text/javascript">
+var btn1=document.getElementById("btn1");
+var btn2=document.getElementById("btn2");
+var hidebtn1=document.getElementById("hidebtn1");
+var hidebtn2=document.getElementById("hidebtn2");
+var hidebtn=document.getElementById("hidebtn");
+var ask=document.getElementById("ask");
+var fail=document.getElementById("fail");
+var hidebtnn=document.getElementById("hidebtnn");
+
+var getData ={};
+getData["uid"] = '<{$USESSINFO.iUserID}>';
+getData["gid"] = '<{$GOODSINFO.gid}>';
+
+//轮播图
+var imgArr = new Array();
+<{section name=DETAILPICLOOP loop=$GOODSINFO.detail_pic_arr}>
+imgArr[<{$smarty.section.DETAILPICLOOP.index}>] = "<{$GOODSINFO.detail_pic_arr[DETAILPICLOOP]}>";
+<{/section}>
+imgInit(imgArr);
+
+btn1.onclick=function()
+{
+	isExchange(getData, true);	
+}
+
+isExchange(getData, false);
+
+//判断是否可兑换
+function isExchange(getData, isAlert){
+	
+	$.ajax({
+		type : 'post', // 提交方式 get/post
+		url : "index.php?r=scoreStore/Ajax/IsExchange",			// 需要提交的 url
+		data : getData,
+		success : function(data) {
+			console.log(data);
+			var data = JSON.parse(data);
+			
+			if(data.ok){
+
+				if(isAlert)
+				{
+					hide.style.display="block";
+					ask.style.display="block";
+				}
+				hidebtn1.onclick=function(){
+					hide.style.display="none";
+				}
+				hidebtn2.onclick=function(){	
+					exchangeGoods(getData);
+				}
+				hidebtn.onclick=function(){
+					hide.style.display="none";
+					ask.style.display="block";
+					success.style.display="none";
+				}
+			}else{
+				if(isAlert)
+				{
+					initBox(data.errmsg);
+				}
+				btnFail(data.errmsg);
+			}
+		}
+	  });
+}
+
+//商品兑换
+function exchangeGoods(getData){
+	$.ajax({
+		type : 'post', // 提交方式 get/post
+		url : "index.php?r=scoreStore/Ajax/ExchangeGoods", // 需要提交的 url
+		data : getData,
+		success : function(data) {
+			console.log(data);
+			var data = JSON.parse(data);
+			
+			if(data.ok){
+				ask.style.display="none";
+				success.style.display="block";
+			}else{
+				initBox(data.errmsg);
+			}
+		}
+	  });
+}
+</script>
+
+<div style="display:none">
+<script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228"></script>
+</div>
+</body>
+</html>

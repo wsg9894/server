@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>我的消息</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="css/movieGame/swiper-3.4.0.min.css">
+    <link rel="stylesheet" href="css/movieGame/main.css">
+    <script type="text/javascript" src="js/movieGame/jquery.min.js"></script>
+    <script type="text/javascript" src="js/movieGame/swiper-3.4.0.min.js"></script>
+    <script type="text/javascript" src="js/movieGame/layout.js"></script>
+    <script type="text/javascript" src="js/movieGame/main.js"></script>
+    <script type="text/javascript" src="js/movieGame/iosreload.js"></script>
+</head>
+<body style="position: inherit">
+<div class="my-head">
+    <a href="/project/index.php?r=partner/Game/MyGame&from=14">
+        <div class="my-head-item">
+            <h3>常玩游戏</h3>
+        </div>
+    </a>
+    <a href="/project/index.php?r=partner/Game/MyPackage&from=14">
+        <div class="my-head-item">
+            <h3>已领礼包</h3>
+        </div>
+    </a>
+    <div class="my-head-item active">
+        <h3>消息</h3>
+    </div>
+</div>
+<div class="cHr"></div>
+<div class="my-content">
+    <div class="my-content-item active">
+        <{foreach from="$MESSAGEINFO" item="MESSAGE"}>
+        <div class="news-content-item">
+            <div class="news-content-item-head">
+                <div class="news-content-item-head-left">
+                    <img src="<{$MESSAGE.img}>" alt="">
+                </div>
+                <div class="news-content-item-head-right">
+                    <h3><{$MESSAGE.title}></h3>
+                    <div class="news-content">
+                        <h4><{$MESSAGE.info}></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <{/foreach}>
+        <{if !$MESSAGEINFO}>
+        <div class="none active">
+            <p>你还没有收到系统提示呦！</p>
+            <img src="images/movieGame/my-news.png" alt="" style="margin-bottom: 0.768rem;">
+        </div>
+        <{/if}>
+    </div>
+</div>
+<div class="game-href" style="position:fixed;z-index: 1000;left: 10%;bottom: 4%;width: 15%;height: 15%;">
+    <a href="/project/index.php?r=partner/Game/Index&from=24"><img src="images/movieGame/gamehref.png" style="width: 100%;float: right;margin-right: 0.0853rem;margin-top: 0.0853rem;" ></a>
+</div>
+<div style="display:none">
+    <script src="https://s11.cnzz.com/z_stat.php?id=1256966228&web_id=1256966228" language="JavaScript"></script>
+</div>
+</body>
+</html>

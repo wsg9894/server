@@ -1,0 +1,252 @@
+*{
+	margin: 0px;
+	padding: 0px;
+	font-family: Microsoft Yahei;
+}
+body{
+	margin: 0px auto;
+	font-size: 16px;
+}
+.blur{
+	-webkit-filter: blur(6px);
+	   -moz-filter: blur(6px);
+	    -ms-filter: blur(6px);    
+	        filter: blur(6px);
+}
+#title{
+	height: 0.4rem;
+	width: 100%;
+	background-color: #5dc280;
+	position: relative;
+}
+#title p{
+	font-size:0.20rem;
+	line-height: 0.4rem;
+	color: #fff;
+	text-align: center;
+}
+#title a{
+	font-size:0.16rem;
+	line-height: 0.4rem;
+	color: #fff;
+	position: absolute;
+	left: 0.1rem;
+	text-decoration: none;
+}
+#share{
+	font-size: 0px;
+}
+#share img{
+	width: 100%;
+}
+#sharebtn-group{
+	height: 1rem;
+	width: 100%;
+	position:relative;
+}
+#sharebtn-group .div{
+	width: 50%;
+	height: 100%;
+	float: left;
+	position: relative;
+}
+#sharebtn-group .div input{
+	margin: 0px 15.87%;
+	margin-top: 0.256rem;
+	height: 0.385rem;
+	width: 68.26%;
+	border:0.01rem red solid;
+	border-radius: 0.05rem;
+	background-color: #fff;
+	color:red;
+	font-size: 0.12rem;
+	-webkit-appearance:none;
+}
+#sharebtn-group .right input{
+	background-color: red;
+	color:#fff;
+}
+#poster-hide{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	background-color:rgba(0,0,0,0.6);
+	display: none;
+}
+#share-hide{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	background-color:rgba(0,0,0,0.6);
+	display: none;
+}
+#div-poster{
+	width: 100%;
+	min-height: 5rem;
+	height: 100%;
+	position: relative;
+}
+#div-poster .hide{
+	width: 100%;
+	height: 100%;
+	position:absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 0;
+	background-color: rgba(0,0,0,0.36);
+}
+#div-poster #poster{
+	-webkit-filter: blur(6px);
+	       -moz-filter: blur(6px);
+	        -ms-filter: blur(6px);    
+	            filter: blur(6px);
+	            position: relative;
+	            z-index: -1;
+}
+#div-poster .box-input{
+	position: absolute;
+	top: 1.3rem;
+	display: none;
+}
+#div-poster .box-text{
+	position: absolute;
+	width: 100%;
+	top: 3.3rem;
+	display: none;
+}
+#div-poster .box-input p{
+	color: #fff;
+	width: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+#div-poster .box-input span{
+	color:yellow;
+}
+#div-poster .box-input .box-box{
+	position: relative;
+	top: 1.5rem;
+}
+#div-poster .box-text p{
+	color: #fff;
+	width: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+#div-poster .box-text span{
+	color:yellow;
+}
+#div-poster .box-text .btn0{
+	position: relative;
+	top: 1rem;
+}
+#div-poster input{
+	width: 76.5625%;
+	height: 0.33rem;
+	margin:0px 11.71875%;
+	margin-top: 0.15rem;
+	border:0.01rem solid black;
+	border-radius: 0.05rem;
+	font-size: 0.12rem;
+}
+#div-poster .btn0{
+	width: 77.1875%;
+	margin:0px 11.40625%;
+	margin-top: 0.15rem;
+	background-color: yellow;
+	border: 0.01rem solid yellow;
+	box-shadow: 0rem 0.03rem #c6d500;
+	-webkit-appearance:none;
+}
+#div-poster .poster{
+	width: 69.33%;
+	margin:0px 15.339%;
+	margin-top: 0.25rem;
+}
+#div-poster .up{
+	position: absolute;
+	top: 3.3rem;
+	width: 6.66%;
+	left:46.67%;
+}
+#div-poster p{
+	text-align: center;
+	width: 1rem;
+	color:red;
+	position: absolute;
+	top: 2.65rem;
+	left: 56.5%;
+	font-size: 0.12rem;
+}
+#div-poster .code{
+	position: absolute;
+	width: 0.75rem;
+	top: 2.46rem;
+	left: 17%;
+
+}
+#div-poster .touch{
+	width: 69.33%;
+	height: 0.365rem;
+	margin:0px 15.339%;
+	margin-top: 0.475rem;
+	border:0.01rem solid black;
+	font-size: 0.12rem;
+	background-color: #f7a162;
+	-webkit-appearance:none;
+}
+#share-result{
+	font-size: 0px;
+	position: relative;
+}
+#share-result img{
+	width: 100%;
+}
+#share-result p{
+	font-size: 0.12rem;
+	position: absolute;
+	top: 1.06rem;
+	left:27.5%;
+	width: 45%;
+	text-align: center;
+}
+#share-result p span{
+	color: red;
+}
+#share-result input{
+	width: 31.25%;
+	height: 0.33rem;
+	border:0.01rem solid black;
+	border-radius: 0.05rem;
+	background-color: #dc800c;
+	color:#fff;
+	font-size: 0.12rem;
+	-webkit-appearance:none;
+	position: absolute;
+	top:4.6rem;
+	left: 34.375%;
+}
+.share_img{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	background-color:rgba(0,0,0,0.6);
+	display: block;
+}
+.share_img img{
+	position:absolute;
+	right:20px;top:20px;
+	/*height:200px;*/
+	width:200px;
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>购票成功</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0,minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="css/output/main.css">
+    <script type="text/javascript" src="js/output/layout.js"></script>
+    <script type="text/javascript" src="js/output/jquery.min.js"></script>
+    <script type="text/javascript" src="js/output/cinemacljs.js"></script>
+    <script>
+        var request = GetRequest();
+        var orderId = request.orderId;
+        var userId = request.userId;
+        getOrderInfo(orderId,userId);
+        function getOrderInfo(orderId,userId)
+        {
+            $.ajax({
+                type:'get',
+                url:'index.php?r=output/Ajax/GetSuccessOrder',
+                data: {orderId:orderId,userId:userId},
+                dataType:'json',
+                success:function(msg){
+                    console.log(msg);
+                    if (msg.ok)
+                    {
+                        showOrderInfo(msg.data);
+                        showMovieImg(msg.data.iMovieID);
+                    }
+                    else
+                    {
+                        alert(msg.msg);
+                    }
+                },
+                error:function(msg){
+                    return false;
+                }
+            });
+        }
+        function showMovieImg(iMovieID){
+            $.ajax({
+                type:'get',
+                url:'index.php?r=output/Ajax/GetMovieInfo',
+                data: {movieId:iMovieID},
+                dataType:'json',
+                success:function(msg){
+                    if (msg.ok)
+                    {
+                        $(".movieImg").css('background-image',"url("+msg.data.sImageUrl+")");
+                    }
+                    else
+                    {
+                        alert(msg.msg);
+                    }
+                },
+                error:function(msg){
+                    return false;
+                }
+            });
+        }
+        function showOrderInfo(orderInfo)
+        {
+
+            var str = '<div class="ticket-pass">';
+            if(orderInfo.sInterfaceValidCode==''){
+                str += '<p class="chupiao">正在出票...</p>';
+                str += '<h3>取票地址：影院内自助取票机可取票</h3>';
+            }else if(orderInfo.sInterfaceValidCode.indexOf("*")==-1){
+                if(orderInfo.sInterfaceValidCode.indexOf("|")==-1){
+                    str += '<span class="pass1">取票码</span><p class="pass1">'+orderInfo.sInterfaceValidCode+'</p>';
+                    str += '<h3>取票地址：影院内自助取票机可取票</h3>';
+                }else{
+                    var qcode = orderInfo.sInterfaceValidCode.split("|")[0];
+                    var ycode = orderInfo.sInterfaceValidCode.split("|")[1];
+                    str += '<ul>';
+                    str += '<li>取票码： <span class="pass2">'+qcode+'</span></li>';
+                    str += '<li>验证码： <span class="pass2">'+ycode+'</span></li>';
+                    str += '<h3>取票地址：影院内自助取票机可取票</h3>';
+                    str += '<p class="guzhang">如遇到自助机故障，可凭取票码'+qcode+'验证码'+ycode+'在影院前台取票</p>';
+                    str += '</ul>';
+                }
+            }else if(orderInfo.sInterfaceValidCode.indexOf("*")!=-1){
+                var arrcode = orderInfo.sInterfaceValidCode.split("*")[0];
+                var errcode = orderInfo.sInterfaceValidCode.split("*")[1];
+                if(arrcode.indexOf("|")==-1){
+                    str += '<span class="pass1">取票码</span>';
+                    str += '<p class="pass1">'+arrcode+'</p>';
+                    str += '<h3>取票地址：影院内自助取票机可取票</h3>';
+                    if(errcode.indexOf("|")==-1){
+                        str +='<p class="guzhang">如遇到自助机故障，可凭故障码'+errcode+'在影院前台取票</p>';
+                    }else{
+                        str +='<p class="guzhang">如遇到自助机故障，可凭故障码'+errcode.split("|")[0]+'验证码'+errcode.split("|")[1]+'在影院前台取票</p>';
+                    }
+                }else{
+                    var qcode = arrcode.split("|")[0];
+                    var ycode = arrcode.split("|")[1];
+                    str += '<ul><li>取票码： <span class="pass2">'+qcode+'</span></li>';
+                    str += '<li>验证码： <span class="pass2">'+ycode+'</span></li></ul>';
+                    str += '<h3>取票地址：影院内自助取票机可取票</h3>';
+                    if(errcode.indexOf("|")==-1){
+                        str +='<p class="guzhang">如遇到自助机故障，可凭故障码'+errcode+'在影院前台取票</p>';
+                    }else{
+                        str +='<p class="guzhang">如遇到自助机故障，可凭故障码'+errcode.split("|")[0]+'验证码'+errcode.split("|")[1]+'在影院前台取票</p>';
+                    }
+                }
+            }else{
+                var str ='<p>出票失败,因故出票失败，请联系客服办理退款。（客服电话：400-603-1331）</p>';
+            }
+            str += '</div>';
+            var contents = '<p>'+orderInfo.dPlayTime+' '+orderInfo.sLanguage+'/'+orderInfo.sDimensional+'</p>';
+            contents += '<h3>'+orderInfo.sCinemaName+'</h3>';
+            contents += '<span>'+orderInfo.orderInfo+'</span>';
+            contents += str;
+            $(".suc-order").html(contents);
+
+            $(".suc-content div.movieImg p").html(orderInfo.sMovieName);
+        }
+    </script>
+</head>
+<body>
+<div class="out-head">
+    <div class="out-head-left">
+        <img src="images/output/reback.png" alt="回退">
+    </div>
+    <div class="out-head-right">
+        <span>支付成功</span>
+    </div>
+</div>
+<div class="suc-content">
+    <div class="movieImg">
+        <p></p>
+        <div class="movieback">
+
+        </div>
+    </div>
+
+    <div class="suc-order">
+
+    </div>
+</div>
+
+</body>
+</html>
